@@ -626,7 +626,8 @@ footer {
 
 .icons:hover {
   transform: scale(1.2);
-  box-shadow: 0 0 20px #eb0033;
+  /*box-shadow: 0 0 20px #eb0033;*/
+  filter: drop-shadow(0 0 20px #eb0033);
 }
 
 @media (max-width: 768px) {
