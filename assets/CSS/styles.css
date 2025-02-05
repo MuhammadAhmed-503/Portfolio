@@ -347,7 +347,7 @@ p {
 }
 
 .timeline-content:hover {
-  transform: scale(1.05);
+  transform: scale(1.05) !important;
   box-shadow: 0 0 25px #eb0033;
 }
 
@@ -478,7 +478,7 @@ img {
 }
 
 .container .container__box .box:hover {
-  transform: scale(1.03);
+  transform: scale(1.03) !important;
   box-shadow: 0 0 25px #eb0033;
 }
 /* ========== Services End ========== */
@@ -625,7 +625,7 @@ footer {
 }
 
 .icons:hover {
-  transform: scale(1.2);
+  transform: scale(1.2) !important;
   /*box-shadow: 0 0 20px #eb0033;*/
   filter: drop-shadow(0 0 20px #eb0033);
 }
