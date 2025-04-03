@@ -1,350 +1,316 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-            name="description"
-            content="Portfolio of a Software Engineering student from the University of Gujrat. Explore my expertise in Front end web development, HTML, CSS, JavaScript, java, data structures, algorithms, and software design. View my projects, achievements, and skills as a passionate developer and problem-solver."
-        />
-        <meta name="keywords" content="Muhammad Ahmed, Muhammad Ahmed From UOG,Muhammad Ahmed Goraya, Software Engineer, Web Developer, Portfolio Website HTML, CSS, JavaScript, Java, Netbeans, BS Software Engineering, University of Gujrat, UOG, Student Web Developer, Projects, Coding, Programmer, Tech Enthusiast, Web Design, Frontend Developer, Full Stack Developer, GitHub Portfolio, SEO Optimized Portfolio, Muhammad Ahmed Projects, Professional Programmer" />
-        
-        <meta name="author" content="Muhammad Ahmed" />
-        <meta name="robots" content="index, follow" />
-        <meta name="theme-color" content="#ffffff" />
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-        <meta
-            name="description"
-            content="Ahmed's portfolio showcases expertise in responsive web development, modern front-end technologies, and engaging designs."
-        />
-        <meta name="google-site-verification" content="Mm9Nk5jjR_1FoJhBgMuI3l5W3LNHIRK8cOJlpJo1M-Y" />
-        
-        <title>Muhammad Ahmed Goraya</title>
-        <script type="application/ld+json">
-            {
-                "@context": "https://schema.org",
-                "@type": "Person",
-                "name": "Muhammad Ahmed",
-                "jobTitle": "Software Engineering Student",
-                "affiliation": "University of Gujrat",
-                "url": "https://muhammadahmed-503.github.io/Portfolio/",
-                "sameAs": [
-                    "https://github.com/MuhammadAhmed-503",
-                    "https://www.linkedin.com/in/muhammad-ahmed-238459288?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
-                ]
-            }
-        </script>
-        <link rel="stylesheet" href="assets/CSS/styles.css" />
-        <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-        <link rel="icon" type="image/png" sizes="192x192" href="assets/Icons/android-icon-192x192.png">
-    </head>
-    <<body>
-        <div class="container">
-            <header>
-                <nav>
-                    <div class="logo" data-aos="fade-right">
-                        <span>Ahmed</span>
-                    </div>
-                    <ul data-aos="fade-down" id="navlist">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#education">Education</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li>
-                            <button
-                                class="themeButton stylebutton"
-                                onclick="changeTheme()"
-                            >
-                                Dark Mode
-                            </button>
-                        </li>
-                    </ul>
-                    <div
-                        data-aos="fade-left"
-                        class="menuicon"
-                        onclick="togglemenu()"
-                    >
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                </nav>
-            </header>
-            <main>
-                <!-- Home Section Start -->
-                <section id="home">
-                    <!--<div id="particles-js"></div>-->
-                    <div class="home-div">
-                        <div data-aos="fade-right" class="mydetails">
-                            <h1>Muhammad <span>Ahmed</span></h1>
-                            <h2><span>Front End </span>Web Developer</h2>
-                            <!-- <p>
-                Proficient in making highly responsive and super attractive
-                websites with an experience of a whole year.
-              </p> -->
-                        </div>
-                        <div data-aos="fade-left" class="image-div">
-                            <img
-                                class="image1"
-                                src="Images/Front3.JPG"
-                                alt="Ahmed's professional portrait"
-                            />
-                        </div>
-                    </div>
-                </section>
-                <!-- Home Section Start -->
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Portfolio of a Software Engineering student from the University of Gujrat. Explore my expertise in Front end web development, HTML, CSS, JavaScript, java, data structures, algorithms, and software design. View my projects, achievements, and skills as a passionate developer and problem-solver."
+    />
+    <meta
+      name="keywords"
+      content="Muhammad Ahmed, Muhammad Ahmed From UOG,Muhammad Ahmed Goraya, Software Engineer, Web Developer, Portfolio Website HTML, CSS, JavaScript, Java, Netbeans, BS Software Engineering, University of Gujrat, UOG, Student Web Developer, Projects, Coding, Programmer, Tech Enthusiast, Web Design, Frontend Developer, Full Stack Developer, GitHub Portfolio, SEO Optimized Portfolio, Muhammad Ahmed Projects, Professional Programmer"
+    />
 
-                <!-- About Section Start -->
-                <section class="about" id="about">
-                    <div class="aboutdiv">
-                        <h2 data-aos="fade-right">About Me</h2>
-                        <p data-aos="fade-up-right">
-                            Hello! I'm Ahmed, a passionate Front-End Web
-                            Developer with a knack for creating responsive and
-                            visually appealing websites. With a year of
-                            experience in the field, I have honed my skills in
-                            HTML, CSS, and JavaScript to deliver high-quality
-                            web solutions. I am currently pursuing a degree in
-                            Software Engineering, which further enhances my
-                            technical expertise and problem-solving abilities.
-                        </p>
-                    </div>
-                </section>
-                <!-- About Section End -->
+    <meta name="author" content="Muhammad Ahmed" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Ahmed's portfolio showcases expertise in responsive web development, modern front-end technologies, and engaging designs."
+    />
+    <meta
+      name="google-site-verification"
+      content="Mm9Nk5jjR_1FoJhBgMuI3l5W3LNHIRK8cOJlpJo1M-Y"
+    />
 
-                <!-- MySkills Section Start -->
-                <section class="myskills">
-                    <div class="">
-                        <h2 data-aos="fade-right">My Skills</h2>
-                        <div data-aos="fade-up-right" class="skills-area">
-                            <div class="skill">
-                                <div class="skill-title">HTML</div>
-                                <div class="skill-bar"></div>
-                                <div class="html skill-fill">
-                                    <span class="skill-percent">99%</span>
-                                </div>
-                            </div>
-                            <div class="skill">
-                                <div class="skill-title">CSS</div>
-                                <div class="skill-bar"></div>
-                                <div class="css skill-fill">
-                                    <span class="skill-percent">90%</span>
-                                </div>
-                            </div>
-                            <div class="skill">
-                                <div class="skill-title">JavaScript</div>
-                                <div class="skill-bar"></div>
-                                <div class="js skill-fill">
-                                    <span class="skill-percent">70%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <!-- MySkills Section End -->
+    <title>Muhammad Ahmed Goraya</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Muhammad Ahmed",
+        "jobTitle": "Software Engineering Student",
+        "affiliation": "University of Gujrat",
+        "url": "https://muhammadahmed-503.github.io/Portfolio/",
+        "sameAs": [
+          "https://github.com/MuhammadAhmed-503",
+          "https://www.linkedin.com/in/muhammad-ahmed-238459288?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+        ]
+      }
+    </script>
+    <link rel="stylesheet" href="assets/CSS/styles.css" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="assets/Icons/android-icon-192x192.png"
+    />
+  </head>
+  <
+  <body>
+    <div class="container">
+      <header>
+        <nav>
+          <div class="logo" data-aos="fade-right">
+            <span>Ahmed</span>
+          </div>
+          <ul data-aos="fade-down" id="navlist">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li>
+              <button class="themeButton stylebutton" onclick="changeTheme()">
+                Dark Mode
+              </button>
+            </li>
+          </ul>
+          <div data-aos="fade-left" class="menuicon" onclick="togglemenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </nav>
+      </header>
+      <main>
+        <!-- Home Section Start -->
+        <section id="home">
+          <!--<div id="particles-js"></div>-->
+          <div class="home-div">
+            <div data-aos="fade-right" class="mydetails">
+              <h1>Muhammad <span>Ahmed</span></h1>
+              <h2><span>Front End </span>Web Developer</h2>
+              <!-- <p>
+                      Proficient in making highly responsive and super attractive
+                      websites with an experience of a whole year.
+                    </p> -->
+            </div>
+            <div data-aos="fade-left" class="image-div">
+              <img
+                class="image1"
+                src="assets/Images/Front3.JPG"
+                alt="Ahmed's professional portrait"
+              />
+            </div>
+          </div>
+        </section>
+        <!-- Home Section Start -->
 
-                <!-- Education Section Start -->
-                <section data-aos="fade-right" class="education" id="education">
-                    <h2 class="heading">Education</h2>
-                    <div class="timeline-items">
-                        <div class="timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div data-aos="fade-right" class="timeline-date">
-                                2021
-                            </div>
-                            <div data-aos="fade-up" class="timeline-content">
-                                <h3>High School</h3>
-                                <p>
-                                    Matriculation from Government Model High
-                                    School, Sarai Alamgir with 90% marks.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div data-aos="fade-right" class="timeline-date">
-                                2023
-                            </div>
-                            <div data-aos="fade-up" class="timeline-content">
-                                <h3>College</h3>
-                                <p>
-                                    Intermediate from Saint Francis Degree
-                                    College, Sarai Alamgir with 80% marks.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div data-aos="fade-right" class="timeline-date">
-                                2024
-                            </div>
-                            <div data-aos="fade-up" class="timeline-content">
-                                <h3>University</h3>
-                                <p>
-                                    Currently enrolled in BS Software
-                                    Engineering at University of Gujrat.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <!-- Education Section End -->
+        <!-- About Section Start -->
+        <section class="about" id="about">
+          <div class="aboutdiv">
+            <h2 data-aos="fade-right">About Me</h2>
+            <p data-aos="fade-up-right">
+              Hello! I'm Ahmed, a passionate Front-End Web Developer with a
+              knack for creating responsive and visually appealing websites.
+              With a year of experience in the field, I have honed my skills in
+              HTML, CSS, and JavaScript to deliver high-quality web solutions. I
+              am currently pursuing a degree in Software Engineering, which
+              further enhances my technical expertise and problem-solving
+              abilities.
+            </p>
+          </div>
+        </section>
+        <!-- About Section End -->
 
-                <!-- Services Section Start -->
-                <section class="services" id="services">
-                    <div class="container">
-                        <h2 data-aos="fade-right" class="heading">
-                            Our Services
-                        </h2>
-                        <div class="container__box">
-                            <!-- Front-End Web Development -->
-                            <div data-aos="fade-right" class="box">
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/11987/11987364.png"
-                                    alt="Front-End Web Development"
-                                />
-                                <h3>Front-End Web Development</h3>
-                                <p>
-                                    Build interactive, responsive, and dynamic
-                                    websites using cutting-edge technologies.
-                                </p>
-                            </div>
-                            <!-- Web Design -->
-                            <div data-aos="fade-right" class="box">
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/3852/3852620.png"
-                                    alt="Web Design"
-                                />
-                                <h3>Web Design</h3>
-                                <p>
-                                    Create beautiful and user-friendly designs
-                                    tailored to meet your business goals.
-                                </p>
-                            </div>
-                            <!-- Maintenance -->
-                            <div data-aos="fade-right" class="box">
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/9042/9042130.png"
-                                    alt="Maintenance"
-                                />
-                                <h3>Maintenance</h3>
-                                <p>
-                                    Ensure your website stays secure,
-                                    up-to-date, and performs optimally at all
-                                    times.
-                                </p>
-                            </div>
-                            <!-- SEO Services -->
-                            <div data-aos="fade-right" class="box">
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/1238/1238682.png"
-                                    alt="SEO Services"
-                                />
-                                <h3>SEO Services</h3>
-                                <p>
-                                    Improve your website’s visibility and
-                                    ranking on search engines with our expert
-                                    SEO strategies.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <!-- Services Section End -->
+        <!-- MySkills Section Start -->
+        <section class="myskills">
+          <div class="">
+            <h2 data-aos="fade-right">My Skills</h2>
+            <div data-aos="fade-up-right" class="skills-area">
+              <div class="skill">
+                <div class="skill-title">HTML</div>
+                <div class="skill-bar"></div>
+                <div class="html skill-fill">
+                  <span class="skill-percent">99%</span>
+                </div>
+              </div>
+              <div class="skill">
+                <div class="skill-title">CSS</div>
+                <div class="skill-bar"></div>
+                <div class="css skill-fill">
+                  <span class="skill-percent">90%</span>
+                </div>
+              </div>
+              <div class="skill">
+                <div class="skill-title">JavaScript</div>
+                <div class="skill-bar"></div>
+                <div class="js skill-fill">
+                  <span class="skill-percent">70%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- MySkills Section End -->
 
-                <!-- Contact Section Start -->
-                <!--<section id="contact">
-                    <div class="contactdiv">
-                        <h2 class="heading">Contact</h2>
-                        <div class="social-media">
-                            <a
-                                href="https://www.instagram.com/o.ahmed503?igsh=MnNsZWdjdXNzcHdv"
-                                ><img class="icons" src="icons/instagram.png"
-                            /></a>
-                            <a href="#" id="whatsapp-link"
-                                ><img class="icons" src="icons/whatsapp.png"
-                            /></a>
-                            <a href="tel:+923439692843"
-                                ><img class="icons" src="icons/phone.png"
-                            /></a>
-                        </div>
-                    </div>
-                </section> -->
+        <!-- Education Section Start -->
+        <section data-aos="fade-right" class="education" id="education">
+          <h2 class="heading">Education</h2>
+          <div class="timeline-items">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div data-aos="fade-right" class="timeline-date">2021</div>
+              <div data-aos="fade-up" class="timeline-content">
+                <h3>High School</h3>
+                <p>
+                  Matriculation from Government Model High School, Sarai Alamgir
+                  with 90% marks.
+                </p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div data-aos="fade-right" class="timeline-date">2023</div>
+              <div data-aos="fade-up" class="timeline-content">
+                <h3>College</h3>
+                <p>
+                  Intermediate from Saint Francis Degree College, Sarai Alamgir
+                  with 80% marks.
+                </p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div data-aos="fade-right" class="timeline-date">2024</div>
+              <div data-aos="fade-up" class="timeline-content">
+                <h3>University</h3>
+                <p>
+                  Currently enrolled in BS Software Engineering at University of
+                  Gujrat.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Education Section End -->
 
-                <section id="contact">
-                    <div class="contactdiv">
-                        <h2 class="heading">Contact</h2>
-                        <div class="contact-container">
-                            <div class="social-media">
-                                <a
-                                    href="https://www.instagram.com/o.ahmed503?igsh=MnNsZWdjdXNzcHdv"
-                                >
-                                    <img
-                                        class="icons"
-                                        src="icons/instagram.png"
-                                    />
-                                </a>
-                                <a href="https://github.com/MuhammadAhmed-503">
-                                    <img class="icons" src="icons/social.png" />
-                                </a>
-                                <a
-                                    href="https://www.linkedin.com/in/muhammad-ahmed-238459288?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
-                                >
-                                    <img
-                                        class="icons"
-                                        src="icons/linkedin.png"
-                                    />
-                                </a>
-                                <a href="#" id="whatsapp-link">
-                                    <img
-                                        class="icons"
-                                        src="icons/whatsapp.png"
-                                    />
-                                </a>
-                                <!--<a href="tel:+923439692843">
-                                    <img class="icons" src="icons/phone.png" />
-                                </a>-->
-                            </div>
-                            <form class="contact-form">
-                                <input
-                                    type="text"
-                                    placeholder="Your Name"
-                                    required
-                                />
-                                <input
-                                    type="email"
-                                    placeholder="Your Email"
-                                    required
-                                />
-                                <textarea
-                                    placeholder="Your Message"
-                                    required
-                                ></textarea>
-                                <button class="stylebutton" type="submit">
-                                    Send Message
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </section>
+        <!-- Services Section Start -->
+        <section class="services" id="services">
+          <div class="container">
+            <h2 data-aos="fade-right" class="heading">Our Services</h2>
+            <div class="container__box">
+              <!-- Front-End Web Development -->
+              <div data-aos="fade-right" class="box">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/11987/11987364.png"
+                  alt="Front-End Web Development"
+                />
+                <h3>Front-End Web Development</h3>
+                <p>
+                  Build interactive, responsive, and dynamic websites using
+                  cutting-edge technologies.
+                </p>
+              </div>
+              <!-- Web Design -->
+              <div data-aos="fade-right" class="box">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/3852/3852620.png"
+                  alt="Web Design"
+                />
+                <h3>Web Design</h3>
+                <p>
+                  Create beautiful and user-friendly designs tailored to meet
+                  your business goals.
+                </p>
+              </div>
+              <!-- Maintenance -->
+              <div data-aos="fade-right" class="box">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/9042/9042130.png"
+                  alt="Maintenance"
+                />
+                <h3>Maintenance</h3>
+                <p>
+                  Ensure your website stays secure, up-to-date, and performs
+                  optimally at all times.
+                </p>
+              </div>
+              <!-- SEO Services -->
+              <div data-aos="fade-right" class="box">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/1238/1238682.png"
+                  alt="SEO Services"
+                />
+                <h3>SEO Services</h3>
+                <p>
+                  Improve your website’s visibility and ranking on search
+                  engines with our expert SEO strategies.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Services Section End -->
 
-                <!-- Contact Section End -->
-            </main>
-            <footer>
-                <p>All rights Reserved</p>
-            </footer>
-        </div>
-        <script src="SCRIPT/script.js"></script>
-        <!-- <script src="https://cdn.jsdelivr.net/npm/particles.js"></script> -->
-        <!-- <script src="particle.js"></script> -->
-        <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-        <script>
-            AOS.init({
-                duration: 1000,
-                once: true,
-                offset: 100
-            });
-        </script>
-    </body>
+        <!-- Contact Section Start -->
+        <section id="contact">
+          <h2 class="heading">Contact</h2>
+          <div class="allcontact">
+            <div class="contactdiv">
+              <div class="contact-container">
+                <div class="social-media center">
+                  <a
+                    href="https://www.instagram.com/o.ahmed503?igsh=MnNsZWdjdXNzcHdv"
+                  >
+                    <img class="icons" src="assets/Icons/instagram.png" />
+                  </a>
+                  <a href="https://github.com/MuhammadAhmed-503">
+                    <img class="icons" src="assets/Icons/social.png" />
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/muhammad-ahmed-238459288?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                  >
+                    <img class="icons" src="assets/Icons/linkedin.png" />
+                  </a>
+                  <a href="#" id="whatsapp-link">
+                    <img class="icons" src="assets/Icons/whatsapp.png" />
+                  </a>
+                </div>
+                <form class="contact-form">
+                  <input type="text" placeholder="Your Name" required />
+                  <input type="email" placeholder="Your Email" required />
+                  <textarea placeholder="Your Message" required></textarea>
+                  <button class="stylebutton" type="submit">
+                    Send Message
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="location center">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13398.9320547222!2d73.758555!3d32.905226!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzLCsDU0JzE4LjgiTiA3M8KwNDUnMzAuOCJF!4v0!5m2!1sen!2s"
+                width="300"
+                height="300"
+                style="border: 0"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              >
+              </iframe>
+            </div>
+          </div>
+        </section>
+        <!-- Contact Section End -->
+      </main>
+      <footer>
+        <p>All rights Reserved</p>
+      </footer>
+    </div>
+    <script src="assets/SCRIPT/script.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/particles.js"></script> -->
+    <!-- <script src="particle.js"></script> -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+        once: true,
+        offset: 100,
+      });
+    </script>
+  </body>
 </html>
