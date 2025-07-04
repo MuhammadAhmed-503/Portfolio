@@ -187,10 +187,6 @@ p {
   border-bottom: 1px solid var(--primary-color);
 }
 
-.aboutdiv {
-  /* Add responsive styles */
-}
-
 .about h2 {
   text-align: center;
   font-size: 2rem;
@@ -599,10 +595,6 @@ footer {
   .about p {
     font-size: 1rem;
     max-width: 90vw;
-  }
-
-  .mydetails h2 {
-    /* margin-bottom: 20px; */
   }
 }
 
