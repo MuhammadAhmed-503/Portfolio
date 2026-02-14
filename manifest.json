@@ -1,0 +1,27 @@
+{
+  "name": "Muhammad Ahmed Goraya - Portfolio",
+  "short_name": "Ahmed Portfolio",
+  "description": "Portfolio of Muhammad Ahmed, Software Engineering Student from University of Gujrat",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/Icons/android-icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/Icons/android-icon-192x192.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "developer", "education"],
+  "lang": "en-US",
+  "dir": "ltr"
+}
