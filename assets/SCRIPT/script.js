@@ -45,18 +45,41 @@ function changeTheme() {
   if (document.body.classList.contains("dark-mode")) {
     themeButton.textContent = "Light Mode";
   } else {
-    themeButton.textContent = "Dark Mode";
-  }
+    themeButton.textContent = "Dark Mode";
+  }
 }
-// Register Service Worker for PWA
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then((registration) => {
-        console.log('Service Worker registered successfully:', registration.scope);
-      })
-      .catch((error) => {
-        console.log('Service Worker registration failed:', error);
-      });
+
+gsap.registerPlugin(TextPlugin);
+
+const words = [
+  "Web Developer",
+  "Web Designer",
+  "Content Creator"
+];
+
+const typingEl = document.querySelector(".typing");
+const tl = gsap.timeline({ repeat: -1 });
+
+words.forEach(word => {
+
+  // TYPE FORWARD
+  tl.to(typingEl, {
+    text: word,
+    duration: word.length * 0.1,
+    ease: "none"
   });
-}
+
+  // PAUSE
+  tl.to({}, { duration: 0.8 });
+
+  // DELETE BACKWARD (RIGHT → LEFT)
+  tl.to({}, {
+    duration: word.length * 0.06,
+    ease: "none",
+    onUpdate() {
+      const progress = this.progress();
+      const cut = Math.ceil(word.length * progress);
+      typingEl.textContent = word.slice(0, word.length - cut);
+    }
+  });
+});
