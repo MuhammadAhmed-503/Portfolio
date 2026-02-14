@@ -1,6 +1,10 @@
-const themeButton = document.querySelector(".themeButton")
+// Theme toggle functionality
+const themeButton = document.querySelector(".themeButton");
+
+// Mobile menu functionality
 const navlist = document.querySelector("#navlist");
 navlist.style.maxHeight = "0px";
+
 function togglemenu() {
   if (navlist.style.maxHeight == "0px") {
     navlist.style.maxHeight = "550px";
@@ -9,12 +13,14 @@ function togglemenu() {
   }
 }
 
+// Close menu when clicking on a link
 document.querySelectorAll("#navlist li").forEach(link => {
   link.addEventListener("click", () => {
     navlist.style.maxHeight = "0px";
   });
 });
 
+// WhatsApp link handler
 document.getElementById("whatsapp-link").addEventListener("click", function (e) {
   e.preventDefault();
   const phoneNumber = "+923439692843";
@@ -26,6 +32,7 @@ document.getElementById("whatsapp-link").addEventListener("click", function (e) 
   }, 1000);
 });
 
+// Smooth scroll to sections
 document.querySelectorAll('nav a').forEach(link => {
   link.addEventListener('click', function(event) {
     event.preventDefault();
@@ -40,6 +47,7 @@ document.querySelectorAll('nav a').forEach(link => {
   });
 });
 
+// Dark/Light mode toggle
 function changeTheme() {
   document.body.classList.toggle("dark-mode");
   if (document.body.classList.contains("dark-mode")) {
@@ -49,6 +57,9 @@ function changeTheme() {
   }
 }
 
+// Typing animation using GSAP
+
+// Typing animation using GSAP
 gsap.registerPlugin(TextPlugin);
 
 const words = [
@@ -61,18 +72,17 @@ const typingEl = document.querySelector(".typing");
 const tl = gsap.timeline({ repeat: -1 });
 
 words.forEach(word => {
-
-  // TYPE FORWARD
+  // Type forward
   tl.to(typingEl, {
     text: word,
     duration: word.length * 0.1,
     ease: "none"
   });
 
-  // PAUSE
+  // Pause
   tl.to({}, { duration: 0.8 });
 
-  // DELETE BACKWARD (RIGHT → LEFT)
+  // Delete backward (right to left)
   tl.to({}, {
     duration: word.length * 0.06,
     ease: "none",

@@ -20,16 +20,14 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  transition: 0.2s, linear;
+  transition: background-color 0.2s linear, color 0.2s linear;
 }
 
 body {
-  /* background: #12172b; */
   background: var(--bg-color);
   background-size: 400% 400%;
   margin: 0;
   font-family: Arial, sans-serif;
-  /* color: white; */
   color: var(--text-color);
   transition: opacity 1s ease-in-out;
 }
@@ -46,33 +44,20 @@ body {
 }
 
 
-/* ========== Home ========== */
+/* ========== Header & Navigation ========== */
 header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  /* background-color: #12172b; */
   z-index: 1000;
-  /* padding: 0 0; */
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 70px;
-  /* border-bottom: 1px solid #eb0033; */
-  /* border-bottom: 1px solid #12172b; */
   border-bottom: 1px solid var(--primary-color);
   backdrop-filter: blur(10px);
 }
-
-
-/*nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}*/
-
 
 nav {
   padding: 10px 30px;
@@ -82,11 +67,9 @@ nav {
   height: 70px;
   width: 100%;
   position: relative;
-  /* border-bottom: 1px solid #eb0033; */
 }
 
 .logo span {
-  /* color: #fff; */
   color: var(--text-color);
   font-size: 1.5rem;
   font-weight: 700;
@@ -105,7 +88,6 @@ nav ul li {
 
 nav ul li a {
   text-decoration: none;
-  /* color: #fff; */
   color: var(--text-color);
   opacity: 1;
 }
@@ -123,7 +105,6 @@ nav ul li a:hover {
   height: 5px;
   width: 35px;
   margin-bottom: 5px;
-  /* background: #fff; */
   background: var(--text-color);
   display: flex;
 }
@@ -140,7 +121,6 @@ nav ul li a:hover {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  /* color: #fff; */
   color: var(--text-color);
   width: 50%;
   padding-left: 2vw;
@@ -174,22 +154,13 @@ p {
 .image1:hover {
   transform: scale(1.02);
 }
-/* ========== End ========== */
 
 
-
-
-
-/* ========== About ========== */
+/* ========== About Section ========== */
 .about {
   padding: 100px 0;
-  /* color: #fff; */
   color: var(--text-color);
   border-bottom: 1px solid var(--primary-color);
-}
-
-.aboutdiv {
-  /* Add responsive styles */
 }
 
 .about h2 {
@@ -205,15 +176,11 @@ p {
   line-height: 1.8;
   text-align: center;
 }
-/* ========== End ========== */
 
 
-
-
-
-/* ========== My Skills ========== */
+/* ========== My Skills Section ========== */
 .myskills {
-  border-bottom: 1px solid #1B2A58;
+  border-bottom: 1px solid var(--primary-color);
   padding: 100px 0;
 }
 
@@ -241,7 +208,6 @@ p {
 
 .skill-bar {
   width: 100%;
-  /* background: rgba(255, 255, 255, 0.2); */
   background: grey;
   height: 20px;
   z-index: -1;
@@ -327,13 +293,9 @@ p {
     font-size: 1rem;
   }
 }
-/* ========== End ========== */
 
 
-
-
-
-/* ========== Education ========== */
+/* ========== Education Section ========== */
 .heading {
   font-size: 2rem;
   text-align: center;
@@ -416,7 +378,7 @@ p {
 }
 
 .timeline-content:hover {
-  transform: scale(1.05) !important;
+  transform: scale(1.05);
   box-shadow: 0 0 25px var(--primary-color);
 }
 
@@ -436,10 +398,6 @@ p {
 
 ::-webkit-scrollbar {
   width: 15px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary-color);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -492,13 +450,9 @@ p {
     font-size: 14px;
   }
 }
-/* ========== End ========== */
 
 
-
-
-
-/* ========== Services ========== */
+/* ========== Services Section ========== */
 .services {
   display: flex;
   justify-content: center;
@@ -529,14 +483,12 @@ img {
 .container__heading {
   text-align: center;
   padding-bottom: 15px;
-  /* color: #e3e3e3; */
   color: var(--text-color);
   text-shadow: 0 0 10px var(--text-color);
   font-size: 50px;
   font-weight: 600;
 }
 .container .container__box .box h3 {
-  /* color: white;*/
   color: var(--text-color);
   font-size: 20px;
   font-weight: 600;
@@ -544,12 +496,10 @@ img {
 .container .container__box .box p {
   font-size: 14px;
   font-weight: 100;
-  /* color: white; */
   color: var(--text-color);
 }
 .container .container__box .box a {
   border-radius: 4px;
-  /* color: white; */
   color: var(--text-color);
 }
 .container .container__box .box a:hover {
@@ -557,13 +507,9 @@ img {
 }
 
 .container .container__box .box:hover {
-  transform: scale(1.03) !important;
+  transform: scale(1.03);
   box-shadow: 0 0 25px var(--primary-color);
 }
-/* ========== Services End ========== */
-
-
-
 
 
 /* ========== Footer ========== */
@@ -572,18 +518,14 @@ footer {
   background: grey;
   padding: 2vw;
 }
-/* ========== Footer End ========== */
 
 
-
-
-
+/* ========== Responsive Media Queries ========== */
 @media (max-width: 768px) {
   .mydetails h1,
   h2,
   p {
     font-size: 1.5rem;
-    /* Adjust font size for mobile view */
   }
 
   .mydetails {
@@ -594,16 +536,11 @@ footer {
     width: 50vw;
     height: 50vw;
     margin: 20px auto;
-    /* Add margin for mobile view */
   }
 
   .about p {
     font-size: 1rem;
     max-width: 90vw;
-  }
-
-  .mydetails h2 {
-    /* margin-bottom: 20px; */
   }
 }
 
@@ -612,14 +549,12 @@ footer {
   h2,
   p {
     font-size: 20px;
-    /* Adjust font size for smaller screens */
   }
 
   .image1 {
     width: 70vw;
     height: 70vw;
     margin: 20px auto;
-    /* Adjust margin for smaller screens */
   }
 
   .about p {
@@ -656,17 +591,17 @@ footer {
   }
 
   nav ul {
-  position: absolute;
-  top: 50px;
-  left: 0;
-  right: 0;
-  flex-direction: column;
-  text-align: center;
-  gap: 0;
-  overflow: hidden;
-  z-index: 1000;
-  background: var(--bg-color);
-}
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    text-align: center;
+    gap: 0;
+    overflow: hidden;
+    z-index: 1000;
+    background: var(--bg-color);
+  }
 
   nav ul li {
     padding: 20px;
@@ -682,136 +617,7 @@ footer {
 }
 
 
-
-
-
-/* ========== Contact ========== */
-/*
-.contactdiv {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 100px 0;
-  color: white;
-}
-
-.contact-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 600px;
-}
-
-.social-media {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  width: 100%;
-}
-
-.social-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.icons {
-  width: 50px;
-  height: 50px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.icons:hover {
-  transform: scale(1.2);
-  filter: drop-shadow(0 0 20px #eb0033);
-}
-
-.social-item span {
-  font-size: 14px;
-  color: white;
-  text-align: center;
-}
-
-.contact-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 90%;
-  max-width: 400px;
-  margin-top: 2rem;
-}
-
-.contact-form input,
-.contact-form textarea {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-}
-
-.stylebutton {
-  padding: 10px;
-  background-color: #eb0033;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.style:hover {
-  background-color: #d0002a;
-}*/
-
-/* Responsive Design */
-/*
-@media (min-width: 769px) {
-  .contact-container {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    max-width: 800px;
-  }
-
-  .social-media {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .social-item {
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .icons {
-    width: 40px;
-    height: 40px;
-  }
-
-  .social-item span {
-    font-size: 16px;
-  }
-
-  .contact-form {
-    margin-top: 0;
-  }
-}*/
-/* ========== End ========== */
-
-
-
-
-
-/* ========== particles-js ========== */
-#particles-js {
-  z-index: -10;
-}
-/* ========== End ========== */
-
-
+/* ========== Utility Classes ========== */
 .light {
   background: white;
   color: var(--text-color);
@@ -828,6 +634,8 @@ footer {
   align-items: center;
 }
 
+
+/* ========== Contact Section ========== */
 #contact {
   padding: 20px;
 }
@@ -843,7 +651,8 @@ footer {
   margin-bottom: 20px;
 }
 
-/* Mobile View */
+
+/* Contact Section - Mobile View */
 @media (max-width: 768px) {
   .contact-container {
     display: flex;
@@ -862,7 +671,6 @@ footer {
     width: 40px;
     height: 40px;
     font-size: 40px;
-    color: red;
   }
 
   .contact-form {
@@ -870,7 +678,6 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    /* background: green; */
   }
 
   .contact-form input,
@@ -903,7 +710,8 @@ footer {
   }
 }
 
-/* Larger Screens */
+
+/* Contact Section - Desktop View */
 @media (min-width: 769px) {
   .allcontact {
     display: flex;
@@ -912,7 +720,6 @@ footer {
     display: flex;
     flex-direction: column;
     width: 100%;
-    /* background: red; */
   }
 
   /* Social icons in horizontal layout */
@@ -981,6 +788,7 @@ footer {
 }
 
 
+/* ========== Projects Section ========== */
 #projects {
   padding: 60px 20px;
   text-align: center;
@@ -1021,7 +829,7 @@ footer {
   height: 180px;
   object-fit: contain;
   border-radius: 8px;
-}s
+}
 
 .project-card h3 {
   font-size: 1.4rem;
