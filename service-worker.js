@@ -1,4 +1,5 @@
-const CACHE_NAME = 'ahmed-portfolio-v1';
+// Cache version - update this to force cache refresh
+const CACHE_NAME = 'ahmed-portfolio-v2-feb2026';
 const urlsToCache = [
   './',
   './index.html',
