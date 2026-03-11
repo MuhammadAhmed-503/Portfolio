@@ -65,7 +65,7 @@ gsap.registerPlugin(TextPlugin);
 const words = [
   "Web Developer",
   "Web Designer",
-  "Content Creator"
+  "SEO Expert",
 ];
 
 const typingEl = document.querySelector(".typing");
