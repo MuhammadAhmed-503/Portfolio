@@ -21,7 +21,7 @@ document.querySelectorAll("#navlist li").forEach(link => {
 });
 
 // WhatsApp link handler
-document.getElementById("whatsapp-link").addEventListener("click", function (e) {
+function handleWhatsAppClick(e) {
   e.preventDefault();
   const phoneNumber = "+923439692843";
   const appLink = `whatsapp://send?phone=${phoneNumber}`;
@@ -30,7 +30,15 @@ document.getElementById("whatsapp-link").addEventListener("click", function (e) 
   setTimeout(() => {
     window.open(webLink, "_blank");
   }, 1000);
-});
+}
+
+document.getElementById("whatsapp-link").addEventListener("click", handleWhatsAppClick);
+
+// Footer WhatsApp link (if exists)
+const footerWhatsApp = document.getElementById("footer-whatsapp");
+if (footerWhatsApp) {
+  footerWhatsApp.addEventListener("click", handleWhatsAppClick);
+}
 
 // Smooth scroll to sections
 document.querySelectorAll('nav a').forEach(link => {
@@ -92,4 +100,63 @@ words.forEach(word => {
       typingEl.textContent = word.slice(0, word.length - cut);
     }
   });
+});
+
+// ========== EmailJS Contact Form ==========
+// Initialize EmailJS with your Public Key
+(function() {
+  emailjs.init("4VnVdzOudEasDxmqH"); // Replace with your EmailJS public key
+})();
+
+// Contact form submission - wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  const contactForm = document.getElementById('contact-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const formStatus = document.getElementById('form-status');
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Disable button and show loading state
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      formStatus.textContent = '';
+      formStatus.className = 'form-status';
+      
+      // EmailJS service configuration
+      const serviceID = 'service_js5vers'; // Replace with your EmailJS service ID
+      const templateID = 'template_a77kgvm'; // Replace with your EmailJS template ID
+      
+      // Send email using EmailJS
+      emailjs.sendForm(serviceID, templateID, contactForm)
+        .then(function() {
+          // Success
+          formStatus.textContent = '✓ Message sent successfully!';
+          formStatus.className = 'form-status success';
+          contactForm.reset();
+          
+          // Re-enable button
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+          
+          // Clear success message after 5 seconds
+          setTimeout(() => {
+            formStatus.textContent = '';
+          }, 5000);
+        }, function(error) {
+          // Error
+          formStatus.textContent = '✗ Failed to send message. Please try again.';
+          formStatus.className = 'form-status error';
+          
+          // Re-enable button
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+          
+          console.error('EmailJS Error:', error);
+        });
+    });
+  } else {
+    console.warn('Contact form not found');
+  }
 });
