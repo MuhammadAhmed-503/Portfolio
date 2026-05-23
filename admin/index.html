@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Admin Panel</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --primary-color: #2C3E7F;
+            --accent-color: #ee0033;
+            --card-bg: #f8f9fa;
+            --surface-bg: rgba(255, 255, 255, 0.92);
+            --border-color: rgba(44, 62, 127, 0.16);
+            --shadow: 0 18px 50px rgba(19, 27, 54, 0.12);
+        }
+
+        *::before,
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(44, 62, 127, 0.14), transparent 36%),
+                radial-gradient(circle at top right, rgba(238, 0, 51, 0.11), transparent 30%),
+                linear-gradient(180deg, #ffffff 0%, #f5f7fb 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 290px minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(248,249,250,0.92));
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            padding: 22px 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+            position: sticky;
+            top: 14px;
+            z-index: 50;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+        }
+
+        .header p {
+            color: rgba(0, 0, 0, 0.72);
+            line-height: 1.6;
+        }
+
+        .header .controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 10px 20px rgba(44, 62, 127, 0.18);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #1f7a53;
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #c47b18;
+            color: white;
+        }
+
+        .tabs {
+            grid-column: 1;
+            display: grid;
+            gap: 10px;
+            position: sticky;
+            top: 124px;
+            align-self: start;
+            background: var(--surface-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-color);
+            padding: 12px 16px;
+            width: 100%;
+            text-align: left;
+            border: 1px solid transparent;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            box-shadow: 0 10px 20px rgba(44, 62, 127, 0.18);
+        }
+
+        .tab-btn:hover {
+            transform: translateX(2px);
+            border-color: var(--border-color);
+        }
+
+        .tab-content {
+            grid-column: 2;
+            display: none;
+            background: var(--surface-bg);
+            border-radius: 22px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(14px);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 18px;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.78);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(44, 62, 127, 0.15);
+            border-radius: 12px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--text-color);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: 2px solid rgba(44, 62, 127, 0.18);
+            border-color: var(--primary-color);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .project-item, .skill-item, .certificate-item, .service-item {
+            border: 1px solid rgba(44, 62, 127, 0.12);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 16px;
+            background: rgba(248, 249, 250, 0.95);
+            box-shadow: 0 10px 24px rgba(19, 27, 54, 0.05);
+        }
+
+        .remove-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .add-btn {
+            background: var(--primary-color);
+            color: white;
+            margin-top: 10px;
+        }
+
+        .image-preview {
+            max-width: 100px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(44, 62, 127, 0.12);
+        }
+
+        .status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 999px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 12px 22px rgba(44, 62, 127, 0.22);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 14px;
+            }
+
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                grid-column: auto;
+                position: static;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .tab-content {
+                grid-column: auto;
+            }
+
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .header {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="header">
+            <h1>Portfolio Admin Panel</h1>
+            <p>Edit everything without touching code. The admin now follows the same blue-and-red visual system as the public site.</p>
+            <div class="controls">
+                <button class="btn-primary" onclick="saveAllData()">💾 Save All Changes</button>
+                <button class="btn-success" onclick="exportData()">📤 Export Data (Backup)</button>
+                <button class="btn-warning" onclick="importData()">📥 Import Data (Restore)</button>
+                <button class="btn-danger" onclick="resetToDefault()">🔄 Reset to Default</button>
+                <button class="btn-primary" onclick="viewLiveSite()">👁️ View Live Site</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('site', this)">Site Settings</button>
+            <button class="tab-btn" onclick="switchTab('hero', this)">Hero Section</button>
+            <button class="tab-btn" onclick="switchTab('about', this)">About Me</button>
+            <button class="tab-btn" onclick="switchTab('skills', this)">Skills</button>
+            <button class="tab-btn" onclick="switchTab('education', this)">Education</button>
+            <button class="tab-btn" onclick="switchTab('services', this)">Services</button>
+            <button class="tab-btn" onclick="switchTab('projects', this)">Projects</button>
+            <button class="tab-btn" onclick="switchTab('certificates', this)">Certificates</button>
+            <button class="tab-btn" onclick="switchTab('contact', this)">Contact</button>
+            <button class="tab-btn" onclick="switchTab('social', this)">Social Links</button>
+            <button class="tab-btn" onclick="switchTab('colors', this)">Colors & Theme</button>
+        </div>
+
+        <!-- Site Settings Tab -->
+        <div id="site-tab" class="tab-content active">
+            <h2>Site Settings</h2>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Site Title (Browser Tab)</label>
+                    <input type="text" id="siteTitle" placeholder="Muhammad Ahmed - Portfolio">
+                </div>
+                <div class="form-group">
+                    <label>Logo Text</label>
+                    <input type="text" id="logoText" placeholder="Ahmed">
+                </div>
+                <div class="form-group">
+                    <label>Footer Copyright Text</label>
+                    <input type="text" id="copyrightText" placeholder="© 2026 Muhammad Ahmed. All rights reserved.">
+                </div>
+                <div class="form-group">
+                    <label>Favicon URL</label>
+                    <input type="text" id="faviconUrl" placeholder="assets/Icons/android-icon-192x192.png">
+                </div>
+                <div class="form-group">
+                    <label>SEO Description</label>
+                    <textarea id="seoDescription" placeholder="Portfolio of Muhammad Ahmed, Software Engineering student..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Section Tab -->
+        <div id="hero-tab" class="tab-content">
+            <h2>Hero Section</h2>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" id="heroFirstName" placeholder="Muhammad">
+                </div>
+                <div class="form-group">
+                    <label>Last Name (Highlighted)</label>
+                    <input type="text" id="heroLastName" placeholder="Ahmed">
+                </div>
+                <div class="form-group">
+                    <label>Typing Words (comma-separated)</label>
+                    <input type="text" id="heroTypingWords" placeholder="Web Developer, Web Designer, SEO Expert">
+                </div>
+                <div class="form-group">
+                    <label>Profile Image URL</label>
+                    <input type="text" id="heroImage" placeholder="assets/Images/Front3.JPG">
+                    <img id="heroImagePreview" class="image-preview" style="display:none">
+                </div>
+            </div>
+        </div>
+
+        <!-- About Tab -->
+        <div id="about-tab" class="tab-content">
+            <h2>About Me Section</h2>
+            <div class="form-group">
+                <label>About Heading</label>
+                <input type="text" id="aboutHeading" placeholder="About Me">
+            </div>
+            <div class="form-group">
+                <label>About Description</label>
+                <textarea id="aboutDescription" rows="5" placeholder="Hello! I'm Ahmed, a Full-Stack Developer..."></textarea>
+            </div>
+        </div>
+
+        <!-- Skills Tab -->
+        <div id="skills-tab" class="tab-content">
+            <h2>Skills Management</h2>
+            <div class="form-group">
+                <label>Skills Section Heading</label>
+                <input type="text" id="skillsHeading" placeholder="My Skills">
+            </div>
+            <div id="skillsList"></div>
+            <button class="btn-success add-btn" onclick="addSkill()">+ Add New Skill</button>
+        </div>
+
+        <!-- Education Tab -->
+        <div id="education-tab" class="tab-content">
+            <h2>Education Timeline</h2>
+            <div class="form-group">
+                <label>Education Heading</label>
+                <input type="text" id="educationHeading" placeholder="Education">
+            </div>
+            <div id="educationList"></div>
+            <button class="btn-success add-btn" onclick="addEducation()">+ Add Education Entry</button>
+        </div>
+
+        <!-- Services Tab -->
+        <div id="services-tab" class="tab-content">
+            <h2>Services Management</h2>
+            <div class="form-group">
+                <label>Services Heading</label>
+                <input type="text" id="servicesHeading" placeholder="Our Services">
+            </div>
+            <div id="servicesList"></div>
+            <button class="btn-success add-btn" onclick="addService()">+ Add New Service</button>
+        </div>
+
+        <!-- Projects Tab -->
+        <div id="projects-tab" class="tab-content">
+            <h2>Projects Management</h2>
+            <div class="form-group">
+                <label>Projects Heading</label>
+                <input type="text" id="projectsHeading" placeholder="My Projects">
+            </div>
+            <div id="projectsList"></div>
+            <button class="btn-success add-btn" onclick="addProject()">+ Add New Project</button>
+        </div>
+
+        <!-- Certificates Tab -->
+        <div id="certificates-tab" class="tab-content">
+            <h2>Certificates Management</h2>
+            <div class="form-group">
+                <label>Certificates Heading</label>
+                <input type="text" id="certificatesHeading" placeholder="My Certificates">
+            </div>
+            <div id="certificatesList"></div>
+            <button class="btn-success add-btn" onclick="addCertificate()">+ Add New Certificate</button>
+        </div>
+
+        <!-- Contact Tab -->
+        <div id="contact-tab" class="tab-content">
+            <h2>Contact Section</h2>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Contact Heading</label>
+                    <input type="text" id="contactHeading" placeholder="Contact Me">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp Phone Number</label>
+                    <input type="text" id="whatsappNumber" placeholder="+923439692843">
+                </div>
+                <div class="form-group">
+                    <label>EmailJS Public Key</label>
+                    <input type="text" id="emailjsKey" placeholder="4VnVdzOudEasDxmqH">
+                </div>
+                <div class="form-group">
+                    <label>EmailJS Service ID</label>
+                    <input type="text" id="emailjsService" placeholder="service_js5vers">
+                </div>
+                <div class="form-group">
+                    <label>EmailJS Template ID</label>
+                    <input type="text" id="emailjsTemplate" placeholder="template_a77kgvm">
+                </div>
+                <div class="form-group">
+                    <label>Google Maps Embed URL</label>
+                    <textarea id="mapEmbedUrl" rows="3" placeholder="https://www.google.com/maps/embed?..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Social Links Tab -->
+        <div id="social-tab" class="tab-content">
+            <h2>Social Media Links</h2>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Instagram URL</label>
+                    <input type="text" id="instagramUrl" placeholder="https://www.instagram.com/...">
+                </div>
+                <div class="form-group">
+                    <label>GitHub URL</label>
+                    <input type="text" id="githubUrl" placeholder="https://github.com/...">
+                </div>
+                <div class="form-group">
+                    <label>LinkedIn URL</label>
+                    <input type="text" id="linkedinUrl" placeholder="https://www.linkedin.com/in/...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Colors & Theme Tab -->
+        <div id="colors-tab" class="tab-content">
+            <h2>Theme Customization</h2>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Primary Color (Light Mode)</label>
+                    <input type="color" id="primaryColorLight" value="#2C3E7F">
+                </div>
+                <div class="form-group">
+                    <label>Primary Color (Dark Mode)</label>
+                    <input type="color" id="primaryColorDark" value="#ee0033">
+                </div>
+                <div class="form-group">
+                    <label>Background Color (Light Mode)</label>
+                    <input type="color" id="bgColorLight" value="#ffffff">
+                </div>
+                <div class="form-group">
+                    <label>Background Color (Dark Mode)</label>
+                    <input type="color" id="bgColorDark" value="#12172b">
+                </div>
+                <div class="form-group">
+                    <label>Text Color (Light Mode)</label>
+                    <input type="color" id="textColorLight" value="#000000">
+                </div>
+                <div class="form-group">
+                    <label>Text Color (Dark Mode)</label>
+                    <input type="color" id="textColorDark" value="#f1f1f1">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="status" class="status">✅ Changes Saved!</div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
