@@ -1,4 +1,4 @@
-/*// Cache version - automatically increments for automatic updates
+// Cache version - automatically increments for automatic updates
 const CACHE_VERSION = 'v' + Math.floor(Date.now() / 3600000); // Changes hourly
 const CACHE_NAME = 'ahmed-portfolio-' + CACHE_VERSION;
 const urlsToCache = [
@@ -88,4 +88,4 @@ self.addEventListener('activate', (event) => {
     })
   );
   self.clients.claim();
-});*/
+});
