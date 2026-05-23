@@ -25,7 +25,13 @@ const defaultData = {
             { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
             { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
             { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
-            { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" }
+            { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+            { name: "Express", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" },
+            { name: "MongoDB", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
+            { name: "Firebase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" },
+            { name: "GitHub", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" },
+            { name: "Postman", icon: "https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" },
+            { name: "GSAP", icon: "https://cdn.worldvectorlogo.com/logos/gsap-greensock.svg" }
         ]
     },
     education: {
@@ -40,21 +46,30 @@ const defaultData = {
         heading: "Our Services",
         items: [
             { title: "Front-End Web Development", description: "Build interactive, responsive, and dynamic websites using cutting-edge technologies.", icon: "https://cdn-icons-png.flaticon.com/512/11987/11987364.png" },
-            { title: "Web Design", description: "Create beautiful and user-friendly designs tailored to meet your business goals.", icon: "https://cdn-icons-png.flaticon.com/512/3852/3852620.png" }
+            { title: "Web Design", description: "Create beautiful and user-friendly designs tailored to meet your business goals.", icon: "https://cdn-icons-png.flaticon.com/512/3852/3852620.png" },
+            { title: "Maintenance", description: "Ensure your website stays secure, up-to-date, and performs optimally at all times.", icon: "https://cdn-icons-png.flaticon.com/512/9042/9042130.png" },
+            { title: "SEO Services", description: "Improve your website’s visibility and ranking on search engines with our expert SEO strategies.", icon: "https://cdn-icons-png.flaticon.com/512/1238/1238682.png" }
         ]
     },
     projects: {
         heading: "My Projects",
         items: [
             { title: "PDF Merger App", description: "A web app to merge multiple PDF files into one.", image: "assets/Images/project1.jpg", liveUrl: "https://pdf-merger-503.netlify.app/", githubUrl: "https://github.com/MuhammadAhmed-503/pdf-merger" },
-            { title: "Tasbeeh Counter", description: "A simple digital Tasbeeh Counter to keep track of your zikar.", image: "assets/Images/tasbeeh-counter.jpg", liveUrl: "https://tasbeeh-counter-503.netlify.app", githubUrl: "https://github.com/MuhammadAhmed-503/Counter-Website" }
+            { title: "Tasbeeh Counter", description: "A simple digital Tasbeeh Counter to keep track of your zikar.", image: "assets/Images/tasbeeh-counter.jpg", liveUrl: "https://tasbeeh-counter-503.netlify.app", githubUrl: "https://github.com/MuhammadAhmed-503/Counter-Website" },
+            { title: "Free Pic", description: "A simple web app to browse and download high-quality images for free, powered by the Unsplash API.", image: "assets/Images/free-pic-project.jpg", liveUrl: "https://free-pic-503.netlify.app", githubUrl: "https://github.com/MuhammadAhmed-503" },
+            { title: "BlogShpere", description: "Full-stack blogging platform built with React, Node, Express, MongoDB and Cloudinary.", image: "assets/Images/blogsphere.png", liveUrl: "https://blogsphere-sj9b.vercel.app/", githubUrl: "https://github.com/MuhammadAhmed-503/BLOGSPHERE" },
+            { title: "My School Website", description: "School website built with HTML, CSS, JS and Firebase (R2).", image: "assets/Images/ghss.png", liveUrl: "https://ghss-sarai-public.web.app/", githubUrl: "" },
+            { title: "Alamgir Fashion Center", description: "E-commerce website built with React, Node, Express, MongoDB and Cloudinary.", image: "assets/Images/afc-yaseen.png", liveUrl: "https://afc-yaseen.vercel.app/", githubUrl: "https://github.com/MuhammadAhmed-503/alamgir-fashion-center" },
+            { title: "Delicious", description: "Restaurant table booking website with full-stack features using React, Node, Express, MongoDB and Cloudinary.", image: "assets/Images/deliciousone.png", liveUrl: "https://deliciousone.vercel.app/", githubUrl: "https://github.com/MuhammadAhmed-503/delicious" }
         ]
     },
     certificates: {
         heading: "My Certificates",
         items: [
             { title: "AI for Everyone", issuer: "DeepLearning.AI (Coursera)", description: "Comprehensive understanding of AI concepts.", image: "assets/Certificates/ai-f-e.jpg", verifyUrl: "https://coursera.org/share/eb425a09b43e4841d9dafee5c1d6319d" },
-            { title: "IBM Full Stack Software Developer", issuer: "IBM (Coursera)", description: "Professional certificate covering front-end, back-end.", image: "assets/Certificates/f-s-s-d.jpg", verifyUrl: "https://coursera.org/share/a470f909c24b92851b6cc1d7f8b2f2f3" }
+            { title: "IBM Full Stack Software Developer", issuer: "IBM (Coursera)", description: "Professional certificate covering front-end, back-end.", image: "assets/Certificates/f-s-s-d.jpg", verifyUrl: "https://coursera.org/share/a470f909c24b92851b6cc1d7f8b2f2f3" },
+            { title: "AI Essentials", issuer: "Coursera", description: "Essential AI tools, techniques, and practical applications for modern problem-solving.", image: "assets/Certificates/ai-e.jpg", verifyUrl: "https://coursera.org/share/99e0fb1aad08c6d7342b608f2bd81019" },
+            { title: "Agile Project Management", issuer: "Coursera", description: "Mastering Agile methodologies, Scrum framework, and effective project management strategies.", image: "assets/Certificates/a-p-m.jpg", verifyUrl: "https://coursera.org/share/4f22b03a8ce8075057f865d78be93f92" }
         ]
     },
     contact: {
@@ -80,8 +95,64 @@ const defaultData = {
     }
 };
 
+function cloneDefaultData() {
+    return JSON.parse(JSON.stringify(defaultData));
+}
+
+function mergeCollection(defaultItems, savedItems) {
+    const merged = Array.isArray(savedItems) ? [...savedItems] : [];
+    defaultItems.forEach((item, index) => {
+        if (!merged[index]) {
+            merged[index] = item;
+        }
+    });
+    return merged;
+}
+
+function normalizePortfolioData(rawData) {
+    if (!rawData || typeof rawData !== 'object') {
+        return cloneDefaultData();
+    }
+
+    const merged = cloneDefaultData();
+
+    merged.site = { ...merged.site, ...(rawData.site || {}) };
+    merged.hero = { ...merged.hero, ...(rawData.hero || {}) };
+    merged.about = { ...merged.about, ...(rawData.about || {}) };
+    merged.skills = {
+        ...merged.skills,
+        ...(rawData.skills || {}),
+        items: mergeCollection(defaultData.skills.items, rawData.skills?.items),
+    };
+    merged.education = {
+        ...merged.education,
+        ...(rawData.education || {}),
+        items: mergeCollection(defaultData.education.items, rawData.education?.items),
+    };
+    merged.services = {
+        ...merged.services,
+        ...(rawData.services || {}),
+        items: mergeCollection(defaultData.services.items, rawData.services?.items),
+    };
+    merged.projects = {
+        ...merged.projects,
+        ...(rawData.projects || {}),
+        items: mergeCollection(defaultData.projects.items, rawData.projects?.items),
+    };
+    merged.certificates = {
+        ...merged.certificates,
+        ...(rawData.certificates || {}),
+        items: mergeCollection(defaultData.certificates.items, rawData.certificates?.items),
+    };
+    merged.contact = { ...merged.contact, ...(rawData.contact || {}) };
+    merged.social = { ...merged.social, ...(rawData.social || {}) };
+    merged.colors = { ...merged.colors, ...(rawData.colors || {}) };
+
+    return merged;
+}
+
 // Load or initialize data
-let portfolioData = JSON.parse(localStorage.getItem('portfolioData')) || defaultData;
+let portfolioData = normalizePortfolioData(JSON.parse(localStorage.getItem('portfolioData')));
 
 // Save data to localStorage
 function saveAllData() {
@@ -189,7 +260,7 @@ function importData() {
         reader.onload = event => {
             try {
                 const importedData = JSON.parse(event.target.result);
-                portfolioData = importedData;
+                portfolioData = normalizePortfolioData(importedData);
                 localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
                 loadDataToForms();
                 showStatus('📤 Data imported successfully! Page will reload.');
@@ -206,7 +277,7 @@ function importData() {
 // Reset to default
 function resetToDefault() {
     if (confirm('⚠️ This will reset ALL your custom data. Are you sure?')) {
-        portfolioData = JSON.parse(JSON.stringify(defaultData));
+        portfolioData = cloneDefaultData();
         localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
         loadDataToForms();
         showStatus('🔄 Reset to default settings!');
