@@ -784,6 +784,145 @@
             });
         });
       }
+
+      <!-- Dynamic Content Loader from Admin Panel -->
+
+    (function() {
+        // Load saved data from localStorage
+        const savedData = localStorage.getItem('portfolioData');
+        if(savedData) {
+            const data = JSON.parse(savedData);
+            
+            // Update page title
+            document.title = data.site.title;
+            
+            // Update logo
+            const logo = document.querySelector('.logo span');
+            if(logo) logo.textContent = data.site.logo;
+            
+            // Update hero name
+            const heroName = document.querySelector('.mydetails h1');
+            if(heroName) heroName.innerHTML = data.hero.firstName + ' <span>' + data.hero.lastName + '</span>';
+            
+            // Update hero image
+            const heroImage = document.querySelector('.image1');
+            if(heroImage) heroImage.src = data.hero.image;
+            
+            // Update typing words (if GSAP is loaded)
+            if(window.gsap && data.hero.typingWords) {
+                // Re-initialize typing with new words
+                const words = data.hero.typingWords;
+                // Your existing typing animation code here
+            }
+            
+            // Update about section
+            const aboutHeading = document.querySelector('#about h2');
+            if(aboutHeading) aboutHeading.textContent = data.about.heading;
+            const aboutDesc = document.querySelector('#about p');
+            if(aboutDesc) aboutDesc.textContent = data.about.description;
+            
+            // Update skills section heading
+            const skillsHeading = document.querySelector('#skills h2');
+            if(skillsHeading) skillsHeading.textContent = data.skills.heading;
+            
+            // Update projects section heading
+            const projectsHeading = document.querySelector('#projects h2');
+            if(projectsHeading) projectsHeading.textContent = data.projects.heading;
+            
+            // Update contact heading
+            const contactHeading = document.querySelector('#contact .heading h2');
+            if(contactHeading) contactHeading.textContent = data.contact.heading;
+            
+            // Update footer copyright
+            const footerText = document.querySelector('.footer-bottom p');
+            if(footerText) footerText.innerHTML = data.site.copyright;
+            
+            // Update social links
+            const socialLinks = document.querySelectorAll('.social-media a');
+            if(socialLinks[0]) socialLinks[0].href = data.social.instagram;
+            if(socialLinks[1]) socialLinks[1].href = data.social.github;
+            if(socialLinks[2]) socialLinks[2].href = data.social.linkedin;
+            
+            // Update WhatsApp link
+            const whatsappLink = document.getElementById('whatsapp-link');
+            if(whatsappLink) {
+                whatsappLink.onclick = (e) => {
+                    e.preventDefault();
+                    window.location.href = 'https://wa.me/' + data.contact.whatsapp;
+                };
+            }
+            
+            // Update map iframe
+            const mapIframe = document.querySelector('.location iframe');
+            if(mapIframe && data.contact.mapEmbed) {
+                mapIframe.src = data.contact.mapEmbed;
+            }
+            
+            // Apply custom colors
+            if(data.colors) {
+                const root = document.documentElement;
+                root.style.setProperty('--primary-color', data.colors.primaryLight);
+                const style = document.createElement('style');
+                style.textContent = `
+                    .dark-mode { --primary-color: ${data.colors.primaryDark}; }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Rebuild Skills grid from admin data (so reordering reflects)
+            if (data.skills && Array.isArray(data.skills.items)) {
+              const skillsContainer = document.querySelector('.skills-grid-container');
+              if (skillsContainer) {
+                skillsContainer.innerHTML = data.skills.items.map(skill => `
+                  <div data-aos="zoom-in-up" class="skill-card">
+                    <img src="${skill.icon}" alt="${skill.name}" />
+                    <h3>${skill.name}</h3>
+                  </div>
+                `).join('');
+              }
+            }
+
+            // Rebuild Projects section
+            if (data.projects && Array.isArray(data.projects.items)) {
+              const projectsContainer = document.querySelector('.projects-container');
+              if (projectsContainer) {
+                projectsContainer.innerHTML = data.projects.items.map(proj => `
+                  <article data-aos="fade-up-right" class="project-card">
+                    <img src="${proj.image}" alt="${proj.title}" />
+                    <h3>${proj.title}</h3>
+                    <p>${proj.description}</p>
+                    ${proj.liveUrl ? `<a href="${proj.liveUrl}" target="_blank">Live Demo</a>` : ''}
+                    ${proj.githubUrl ? `<a href="${proj.githubUrl}" target="_blank">GitHub</a>` : ''}
+                  </article>
+                `).join('');
+              }
+            }
+
+            // Rebuild Certificates section
+            if (data.certificates && Array.isArray(data.certificates.items)) {
+              const certContainer = document.querySelector('.certificates-container');
+              if (certContainer) {
+                certContainer.innerHTML = data.certificates.items.map(cert => `
+                  <article data-aos="flip-left" class="certificate-card">
+                    <img src="${cert.image}" alt="${cert.title}" onclick="openImageModal(this.src)" style="cursor:pointer" />
+                    <h3>${cert.title}</h3>
+                    ${cert.issuer ? `<p class=\"cert-issuer\">${cert.issuer}</p>` : ''}
+                    <p>${cert.description}</p>
+                    ${cert.verifyUrl ? `<a href=\"${cert.verifyUrl}\" target=\"_blank\">Verify Certificate</a>` : ''}
+                  </article>
+                `).join('');
+              }
+            }
+
+            // Refresh AOS to pick up new elements
+            if (window.AOS && typeof AOS.refresh === 'function') {
+              AOS.refresh();
+            }
+            
+            console.log('✅ Dynamic content loaded from admin panel');
+        }
+    })();
+
     </script>
   </body>
 </html>

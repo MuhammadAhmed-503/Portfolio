@@ -154,6 +154,155 @@ function normalizePortfolioData(rawData) {
 // Load or initialize data
 let portfolioData = normalizePortfolioData(JSON.parse(localStorage.getItem('portfolioData')));
 
+// --- Authentication & Admin Guard ---
+async function hashText(text) {
+    if (!window.crypto || !crypto.subtle) return null;
+    const enc = new TextEncoder();
+    const data = await crypto.subtle.digest('SHA-256', enc.encode(text));
+    return Array.from(new Uint8Array(data)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function ensureAdminHash() {
+    if (!localStorage.getItem('adminAuthHash')) {
+        const h = await hashText('admin123'); // default password if none set
+        if (h) localStorage.setItem('adminAuthHash', h);
+    }
+}
+
+function showPasswordHint() {
+    alert('If you have not set a custom password, the default is: admin123');
+}
+
+async function tryLogin() {
+    const input = document.getElementById('adminPasswordInput');
+    if (!input) return;
+    const pwd = input.value || '';
+    const h = await hashText(pwd);
+    const stored = localStorage.getItem('adminAuthHash');
+    if (h && stored && h === stored) {
+        // mark in-memory authenticated for this page session only
+        window.__adminAuthenticated = true;
+        document.getElementById('loginOverlay').classList.add('hidden');
+        document.querySelector('.admin-container').style.filter = 'none';
+        showStatus('🔐 Authenticated');
+        // now initialize admin data UI
+        loadDataToForms();
+    } else {
+        showStatus('❌ Wrong password');
+    }
+}
+
+function logoutAdmin() {
+    // clear in-memory auth flag and require password on next visit/load
+    window.__adminAuthenticated = false;
+    document.getElementById('loginOverlay').classList.remove('hidden');
+    document.querySelector('.admin-container').style.filter = 'blur(2px)';
+    showStatus('🔓 Logged out');
+}
+
+// Open change-password modal (modal markup present in index.html)
+function changeAdminPassword() {
+    const modal = document.getElementById('changePasswordModal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closeChangePasswordModal() {
+    const modal = document.getElementById('changePasswordModal');
+    if (modal) modal.classList.add('hidden');
+    // clear inputs
+    const cur = document.getElementById('currentAdminPwd');
+    const nw = document.getElementById('newAdminPwd');
+    const cf = document.getElementById('confirmAdminPwd');
+    if (cur) cur.value = '';
+    if (nw) nw.value = '';
+    if (cf) cf.value = '';
+}
+
+async function saveChangePassword() {
+    const cur = document.getElementById('currentAdminPwd')?.value || '';
+    const nw = document.getElementById('newAdminPwd')?.value || '';
+    const cf = document.getElementById('confirmAdminPwd')?.value || '';
+    if (!nw || nw !== cf) {
+        showStatus('❌ New passwords do not match');
+        return;
+    }
+    const stored = localStorage.getItem('adminAuthHash');
+    if (stored) {
+        const curHash = await hashText(cur);
+        if (!curHash || curHash !== stored) {
+            showStatus('❌ Current password is incorrect');
+            return;
+        }
+    }
+    const newHash = await hashText(nw);
+    if (newHash) {
+        localStorage.setItem('adminAuthHash', newHash);
+        showStatus('✅ Password updated');
+        closeChangePasswordModal();
+    } else {
+        showStatus('❌ Unable to update password');
+    }
+}
+
+// --- Drag & Drop helpers for reordering ---
+let _dragState = null;
+function dragStart(e, type, index) {
+    _dragState = { type, index };
+    try { e.dataTransfer.effectAllowed = 'move'; } catch (err) {}
+    e.currentTarget && e.currentTarget.classList && e.currentTarget.classList.add('dragging');
+}
+function dragOver(e) {
+    e.preventDefault();
+    try { e.dataTransfer.dropEffect = 'move'; } catch (err) {}
+}
+function dragEnd(e) {
+    e.currentTarget && e.currentTarget.classList && e.currentTarget.classList.remove('dragging');
+    _dragState = null;
+}
+function dropItem(e, type, toIndex) {
+    e.preventDefault();
+    if (!_dragState) return;
+    const { type: fromType, index: fromIndex } = _dragState;
+    if (fromType !== type) return;
+    if (fromIndex === toIndex) return;
+    const arr = portfolioData[type].items;
+    const item = arr.splice(fromIndex, 1)[0];
+    arr.splice(toIndex, 0, item);
+    // persist and re-render the list
+    saveAllData();
+    switch (type) {
+        case 'skills': renderSkillsList(); break;
+        case 'education': renderEducationList(); break;
+        case 'services': renderServicesList(); break;
+        case 'projects': renderProjectsList(); break;
+        case 'certificates': renderCertificatesList(); break;
+    }
+    _dragState = null;
+}
+
+function isAdminAuthenticated() {
+    return !!window.__adminAuthenticated;
+}
+
+// Use hero image as admin logo if available
+function setAdminLogoFromHero() {
+    try {
+        const imgEl = document.getElementById('adminLogoImg');
+        const textEl = document.getElementById('brandMarkText');
+        const heroUrl = portfolioData?.hero?.image || '';
+        if (imgEl && heroUrl) {
+            imgEl.src = heroUrl;
+            imgEl.style.display = 'inline-block';
+            if (textEl) textEl.style.display = 'none';
+        } else if (imgEl) {
+            imgEl.style.display = 'none';
+            if (textEl) textEl.style.display = 'inline-block';
+        }
+    } catch (e) {
+        console.warn('setAdminLogoFromHero failed', e);
+    }
+}
+
 // Save data to localStorage
 function saveAllData() {
     // Collect all form values
@@ -298,6 +447,7 @@ function loadDataToForms() {
     document.getElementById('heroTypingWords').value = portfolioData.hero.typingWords.join(', ');
     document.getElementById('heroImage').value = portfolioData.hero.image;
     updateHeroImagePreview();
+    setAdminLogoFromHero();
     
     document.getElementById('aboutHeading').value = portfolioData.about.heading;
     document.getElementById('aboutDescription').value = portfolioData.about.description;
@@ -371,10 +521,13 @@ function renderSkillsList() {
     container.innerHTML = '';
     portfolioData.skills.items.forEach((skill, index) => {
         container.innerHTML += `
-            <div class="skill-item">
-                <input type="text" placeholder="Skill Name" value="${skill.name}" onchange="updateSkill(${index}, 'name', this.value)">
-                <input type="text" placeholder="Icon URL" value="${skill.icon}" onchange="updateSkill(${index}, 'icon', this.value)">
-                <button class="remove-btn" onclick="removeSkill(${index})">Remove</button>
+            <div class="skill-item draggable-item" draggable="true" ondragstart="dragStart(event,'skills',${index})" ondragover="dragOver(event)" ondrop="dropItem(event,'skills',${index})" ondragend="dragEnd(event)">
+                <div class="drag-handle" title="Drag to reorder">☰</div>
+                <div style="flex:1">
+                    <input type="text" placeholder="Skill Name" value="${skill.name}" onchange="updateSkill(${index}, 'name', this.value)">
+                    <input type="text" placeholder="Icon URL" value="${skill.icon}" onchange="updateSkill(${index}, 'icon', this.value)">
+                    <button class="remove-btn" onclick="removeSkill(${index})">Remove</button>
+                </div>
             </div>
         `;
     });
@@ -400,11 +553,14 @@ function renderEducationList() {
     container.innerHTML = '';
     portfolioData.education.items.forEach((item, index) => {
         container.innerHTML += `
-            <div class="project-item">
-                <input type="text" placeholder="Year" value="${item.year}" onchange="updateEducation(${index}, 'year', this.value)">
-                <input type="text" placeholder="Title" value="${item.title}" onchange="updateEducation(${index}, 'title', this.value)">
-                <textarea placeholder="Description" onchange="updateEducation(${index}, 'description', this.value)">${item.description}</textarea>
-                <button class="remove-btn" onclick="removeEducation(${index})">Remove</button>
+            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'education',${index})" ondragover="dragOver(event)" ondrop="dropItem(event,'education',${index})" ondragend="dragEnd(event)">
+                <div class="drag-handle" title="Drag to reorder">☰</div>
+                <div style="flex:1">
+                    <input type="text" placeholder="Year" value="${item.year}" onchange="updateEducation(${index}, 'year', this.value)">
+                    <input type="text" placeholder="Title" value="${item.title}" onchange="updateEducation(${index}, 'title', this.value)">
+                    <textarea placeholder="Description" onchange="updateEducation(${index}, 'description', this.value)">${item.description}</textarea>
+                    <button class="remove-btn" onclick="removeEducation(${index})">Remove</button>
+                </div>
             </div>
         `;
     });
@@ -429,11 +585,14 @@ function renderServicesList() {
     container.innerHTML = '';
     portfolioData.services.items.forEach((item, index) => {
         container.innerHTML += `
-            <div class="project-item">
-                <input type="text" placeholder="Title" value="${item.title}" onchange="updateService(${index}, 'title', this.value)">
-                <textarea placeholder="Description" onchange="updateService(${index}, 'description', this.value)">${item.description}</textarea>
-                <input type="text" placeholder="Icon URL" value="${item.icon}" onchange="updateService(${index}, 'icon', this.value)">
-                <button class="remove-btn" onclick="removeService(${index})">Remove</button>
+            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'services',${index})" ondragover="dragOver(event)" ondrop="dropItem(event,'services',${index})" ondragend="dragEnd(event)">
+                <div class="drag-handle" title="Drag to reorder">☰</div>
+                <div style="flex:1">
+                    <input type="text" placeholder="Title" value="${item.title}" onchange="updateService(${index}, 'title', this.value)">
+                    <textarea placeholder="Description" onchange="updateService(${index}, 'description', this.value)">${item.description}</textarea>
+                    <input type="text" placeholder="Icon URL" value="${item.icon}" onchange="updateService(${index}, 'icon', this.value)">
+                    <button class="remove-btn" onclick="removeService(${index})">Remove</button>
+                </div>
             </div>
         `;
     });
@@ -458,13 +617,16 @@ function renderProjectsList() {
     container.innerHTML = '';
     portfolioData.projects.items.forEach((item, index) => {
         container.innerHTML += `
-            <div class="project-item">
-                <input type="text" placeholder="Title" value="${item.title}" onchange="updateProject(${index}, 'title', this.value)">
-                <textarea placeholder="Description" onchange="updateProject(${index}, 'description', this.value)">${item.description}</textarea>
-                <input type="text" placeholder="Image URL" value="${item.image}" onchange="updateProject(${index}, 'image', this.value)">
-                <input type="text" placeholder="Live Demo URL" value="${item.liveUrl}" onchange="updateProject(${index}, 'liveUrl', this.value)">
-                <input type="text" placeholder="GitHub URL" value="${item.githubUrl}" onchange="updateProject(${index}, 'githubUrl', this.value)">
-                <button class="remove-btn" onclick="removeProject(${index})">Remove</button>
+            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'projects',${index})" ondragover="dragOver(event)" ondrop="dropItem(event,'projects',${index})" ondragend="dragEnd(event)">
+                <div class="drag-handle" title="Drag to reorder">☰</div>
+                <div style="flex:1">
+                    <input type="text" placeholder="Title" value="${item.title}" onchange="updateProject(${index}, 'title', this.value)">
+                    <textarea placeholder="Description" onchange="updateProject(${index}, 'description', this.value)">${item.description}</textarea>
+                    <input type="text" placeholder="Image URL" value="${item.image}" onchange="updateProject(${index}, 'image', this.value)">
+                    <input type="text" placeholder="Live Demo URL" value="${item.liveUrl}" onchange="updateProject(${index}, 'liveUrl', this.value)">
+                    <input type="text" placeholder="GitHub URL" value="${item.githubUrl}" onchange="updateProject(${index}, 'githubUrl', this.value)">
+                    <button class="remove-btn" onclick="removeProject(${index})">Remove</button>
+                </div>
             </div>
         `;
     });
@@ -489,13 +651,16 @@ function renderCertificatesList() {
     container.innerHTML = '';
     portfolioData.certificates.items.forEach((item, index) => {
         container.innerHTML += `
-            <div class="project-item">
-                <input type="text" placeholder="Title" value="${item.title}" onchange="updateCertificate(${index}, 'title', this.value)">
-                <input type="text" placeholder="Issuer" value="${item.issuer}" onchange="updateCertificate(${index}, 'issuer', this.value)">
-                <textarea placeholder="Description" onchange="updateCertificate(${index}, 'description', this.value)">${item.description}</textarea>
-                <input type="text" placeholder="Image URL" value="${item.image}" onchange="updateCertificate(${index}, 'image', this.value)">
-                <input type="text" placeholder="Verify URL" value="${item.verifyUrl}" onchange="updateCertificate(${index}, 'verifyUrl', this.value)">
-                <button class="remove-btn" onclick="removeCertificate(${index})">Remove</button>
+            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'certificates',${index})" ondragover="dragOver(event)" ondrop="dropItem(event,'certificates',${index})" ondragend="dragEnd(event)">
+                <div class="drag-handle" title="Drag to reorder">☰</div>
+                <div style="flex:1">
+                    <input type="text" placeholder="Title" value="${item.title}" onchange="updateCertificate(${index}, 'title', this.value)">
+                    <input type="text" placeholder="Issuer" value="${item.issuer}" onchange="updateCertificate(${index}, 'issuer', this.value)">
+                    <textarea placeholder="Description" onchange="updateCertificate(${index}, 'description', this.value)">${item.description}</textarea>
+                    <input type="text" placeholder="Image URL" value="${item.image}" onchange="updateCertificate(${index}, 'image', this.value)">
+                    <input type="text" placeholder="Verify URL" value="${item.verifyUrl}" onchange="updateCertificate(${index}, 'verifyUrl', this.value)">
+                    <button class="remove-btn" onclick="removeCertificate(${index})">Remove</button>
+                </div>
             </div>
         `;
     });
@@ -608,9 +773,24 @@ document.getElementById('heroImage')?.addEventListener('input', updateHeroImageP
 });
 
 // Initialize
-loadDataToForms();
+// Initialize authentication and UI only after ensuring a password exists
+async function initAuth() {
+    await ensureAdminHash();
+    // Always require password when loading the admin route.
+    // On successful login `window.__adminAuthenticated` will be set for this page session.
+    if (!isAdminAuthenticated()) {
+        document.getElementById('loginOverlay').classList.remove('hidden');
+        document.querySelector('.admin-container').style.filter = 'blur(2px)';
+    } else {
+        document.getElementById('loginOverlay').classList.add('hidden');
+        document.querySelector('.admin-container').style.filter = 'none';
+        loadDataToForms();
+    }
+}
 
-// Auto-save every 30 seconds
+initAuth();
+
+// Auto-save every 30 seconds only when authenticated
 setInterval(() => {
-    saveAllData();
+    if (isAdminAuthenticated()) saveAllData();
 }, 30000);

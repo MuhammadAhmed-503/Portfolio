@@ -3,71 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Admin Panel</title>
+    <title>Portfolio Admin Control Center</title>
     <style>
+        /* ========== Portfolio Synced Variables ========== */
         :root {
             --bg-color: #ffffff;
             --text-color: #000000;
             --primary-color: #2C3E7F;
-            --accent-color: #ee0033;
             --card-bg: #f8f9fa;
-            --surface-bg: rgba(255, 255, 255, 0.92);
-            --border-color: rgba(44, 62, 127, 0.16);
-            --shadow: 0 18px 50px rgba(19, 27, 54, 0.12);
-            --muted-text: rgba(0, 0, 0, 0.68);
-            --panel-bg: rgba(255, 255, 255, 0.84);
-            --panel-alt: rgba(44, 62, 127, 0.06);
+            --button-bg: #e0e0e0;
+            --button-text: #000;
+            
+            /* Admin structural extensions derived from main system */
+            --border-subtle: rgba(44, 62, 127, 0.2);
+            --radius-md: 14px;
+            --radius-sm: 6px;
+            --transition: all 0.25s ease;
         }
 
-        *::before,
+        /* Seamless Dark Mode Interface integration */
+        .dark-mode-active {
+            --bg-color: #12172b;
+            --text-color: #f1f1f1;
+            --primary-color: #ee0033;
+            --card-bg: #1e1e1e;
+            --button-bg: #333;
+            --button-text: #fff;
+            --border-subtle: rgba(238, 0, 51, 0.2);
+        }
+
         * {
-            margin: 0;
             padding: 0;
+            margin: 0;
             box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
+            transition: background-color 0.2s linear, color 0.2s linear;
         }
 
         body {
+            background: var(--bg-color);
             font-family: Arial, sans-serif;
-            background:
-                radial-gradient(circle at top left, rgba(44, 62, 127, 0.14), transparent 36%),
-                radial-gradient(circle at top right, rgba(238, 0, 51, 0.11), transparent 30%),
-                linear-gradient(180deg, #ffffff 0%, #f5f7fb 100%);
             color: var(--text-color);
             min-height: 100vh;
-            padding: 22px;
+            line-height: 1.5;
+            padding: 24px;
         }
 
         .admin-container {
-            max-width: 1500px;
+            max-width: 1600px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 290px minmax(0, 1fr);
-            gap: 22px;
-            align-items: start;
+            grid-template-columns: 280px minmax(0, 1fr);
+            gap: 24px;
         }
 
+        /* ========== Header & Configuration Panels ========== */
         .header {
             grid-column: 1 / -1;
-            background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(248,249,250,0.92));
-            border: 1px solid var(--border-color);
-            border-radius: 26px;
-            padding: 26px 28px;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(14px);
-            position: sticky;
-            top: 14px;
-            z-index: 50;
+            background: var(--card-bg);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         .header-row {
             display: flex;
             justify-content: space-between;
-            gap: 18px;
-            align-items: flex-start;
+            align-items: center;
+            gap: 24px;
             flex-wrap: wrap;
         }
 
@@ -78,294 +81,317 @@
         }
 
         .brand-mark {
-            width: 56px;
-            height: 56px;
-            border-radius: 18px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
             display: grid;
             place-items: center;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            font-size: 1.35rem;
-            box-shadow: 0 16px 24px rgba(44, 62, 127, 0.18);
+            background: var(--primary-color);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px var(--primary-color);
         }
 
         .brand-copy h1 {
-            color: var(--primary-color);
-            margin-bottom: 8px;
-            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            color: var(--text-color);
+            font-size: 1.4rem;
+            font-weight: 700;
         }
 
         .brand-copy p {
-            color: var(--muted-text);
-            line-height: 1.6;
-            max-width: 760px;
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.85rem;
+            margin-top: 2px;
         }
 
         .header-meta {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(120px, 1fr));
-            gap: 12px;
-            min-width: min(100%, 420px);
+            display: flex;
+            gap: 16px;
         }
 
         .meta-chip {
-            border: 1px solid rgba(44, 62, 127, 0.12);
-            border-radius: 18px;
-            padding: 12px 14px;
-            background: rgba(255,255,255,0.78);
-            box-shadow: 0 10px 22px rgba(19, 27, 54, 0.05);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            background: var(--bg-color);
+            min-width: 130px;
+            text-align: center;
         }
 
         .meta-chip span {
             display: block;
-            font-size: 0.8rem;
-            color: var(--muted-text);
-            margin-bottom: 6px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.7;
+            font-weight: bold;
         }
 
         .meta-chip strong {
-            color: var(--primary-color);
-            font-size: 1rem;
+            color: var(--text-color);
+            font-size: 0.95rem;
         }
 
-        .header .controls {
+        .controls {
             display: flex;
             gap: 12px;
-            margin-top: 18px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--primary-color);
             flex-wrap: wrap;
         }
 
+        /* ========== System Buttons & Interactions ========== */
         button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 999px;
+            font-family: inherit;
+            padding: 10px 18px;
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-sm);
             cursor: pointer;
+            font-size: 0.85rem;
             font-weight: bold;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            background: var(--button-bg);
+            color: var(--button-text);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .btn-primary {
-            background: var(--primary-color);
-            color: white;
-            box-shadow: 0 10px 20px rgba(44, 62, 127, 0.18);
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--primary-color);
         }
 
+        .btn-primary { 
+            background-color: var(--primary-color); 
+            color: #ffffff; 
+        }
         .btn-primary:hover {
-            transform: translateY(-2px);
+            background-color: transparent;
+            color: var(--text-color);
         }
 
-        .btn-success {
-            background: #1f7a53;
-            color: white;
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background: var(--accent-color);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-warning {
-            background: #c47b18;
-            color: white;
-        }
-
+        /* ========== Left Sidebar Tabs ========== */
         .tabs {
             grid-column: 1;
-            display: grid;
-            gap: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
             position: sticky;
-            top: 130px;
-            align-self: start;
-            background: var(--surface-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 26px;
-            padding: 18px;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(14px);
+            top: 24px;
         }
 
         .sidebar-head {
-            padding: 12px 12px 4px;
+            padding: 4px 8px 12px;
+            border-bottom: 1px solid var(--primary-color);
+            margin-bottom: 12px;
         }
 
         .sidebar-head h2 {
-            color: var(--primary-color);
-            font-size: 1.05rem;
-            margin-bottom: 6px;
-        }
-
-        .sidebar-head p {
-            color: var(--muted-text);
-            font-size: 0.92rem;
-            line-height: 1.5;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .tab-btn {
-            background: rgba(255, 255, 255, 0.9);
+            background: transparent;
             color: var(--text-color);
-            padding: 12px 16px;
+            border-color: transparent;
             width: 100%;
             text-align: left;
-            border: 1px solid transparent;
-            border-radius: 16px;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            box-shadow: 0 10px 20px rgba(44, 62, 127, 0.18);
+            justify-content: flex-start;
+            padding: 11px 14px;
+            font-weight: normal;
         }
 
         .tab-btn:hover {
-            transform: translateX(2px);
-            border-color: var(--border-color);
+            background: rgba(44, 62, 127, 0.1);
+            border-color: var(--primary-color);
         }
 
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: #ffffff;
+            font-weight: bold;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 12px var(--primary-color);
+        }
+
+        /* ========== Main Content Areas ========== */
         .tab-content {
             grid-column: 2;
             display: none;
-            background: var(--surface-bg);
-            border-radius: 26px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(14px);
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            border: 1px solid var(--primary-color);
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .tab-content h2 {
-            color: var(--primary-color);
-            margin-bottom: 18px;
-            font-size: 1.5rem;
-        }
-
         .section-intro {
             display: flex;
             justify-content: space-between;
-            gap: 16px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
+            align-items: flex-start;
+            gap: 24px;
+            border-bottom: 1px solid var(--primary-color);
+            padding-bottom: 16px;
+            margin-bottom: 28px;
+        }
+
+        .tab-content h2 {
+            font-size: 1.6rem;
+            color: var(--text-color);
         }
 
         .section-intro p {
-            color: var(--muted-text);
-            line-height: 1.6;
-            max-width: 720px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 4px;
         }
 
         .section-badge {
-            padding: 8px 12px;
-            border-radius: 999px;
-            background: var(--panel-alt);
-            color: var(--primary-color);
-            font-size: 0.85rem;
-            border: 1px solid rgba(44, 62, 127, 0.1);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 1px solid var(--primary-color);
         }
 
+        /* ========== Form Controls & Fields ========== */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
-            color: rgba(0, 0, 0, 0.78);
+            font-size: 0.9rem;
+            color: var(--text-color);
         }
 
         input, textarea, select {
             width: 100%;
-            padding: 12px 14px;
-            border: 1px solid rgba(44, 62, 127, 0.15);
-            border-radius: 12px;
-            font-size: 14px;
-            background: rgba(255, 255, 255, 0.92);
+            padding: 11px 14px;
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: var(--bg-color);
             color: var(--text-color);
+            transition: var(--transition);
         }
 
         input:focus, textarea:focus, select:focus {
-            outline: 2px solid rgba(44, 62, 127, 0.18);
-            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 15px var(--primary-color);
+            transform: translateY(-1px);
         }
 
         textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 120px;
         }
 
+        /* Layout Grid Utilities */
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            gap: 24px;
         }
 
         .grid-3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 24px;
         }
 
+        /* ========== Dynamic List Containers (Skills, Projects, etc) ========== */
         .project-item, .skill-item, .certificate-item, .service-item {
-            border: 1px solid rgba(44, 62, 127, 0.12);
-            padding: 18px;
-            margin-bottom: 16px;
-            border-radius: 18px;
-            background: rgba(248, 249, 250, 0.95);
-            box-shadow: 0 10px 24px rgba(19, 27, 54, 0.05);
+            border: 1px solid var(--primary-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--radius-md);
+            background: var(--bg-color);
+            transition: var(--transition);
         }
+
+        .project-item:hover, .skill-item:hover, .certificate-item:hover, .service-item:hover {
+            box-shadow: 0 0 20px rgba(44, 62, 127, 0.2);
+        }
+
+        /* Drag & drop visuals */
+        .draggable-item { display:flex; align-items:flex-start; gap:12px; }
+        .drag-handle { cursor: grab; width:34px; height:34px; display:inline-grid; place-items:center; background:var(--primary-color); color:#fff; border-radius:8px; margin-right:8px; flex-shrink:0; }
+        .dragging { opacity: 0.5; }
 
         .remove-btn {
-            background: var(--accent-color);
-            color: white;
-            padding: 5px 10px;
-            font-size: 12px;
-            margin-top: 10px;
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--text-color);
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            margin-top: 12px;
+        }
+
+        .remove-btn:hover {
+            background: var(--primary-color);
+            color: #fff;
         }
 
         .add-btn {
-            background: var(--primary-color);
-            color: white;
-            margin-top: 10px;
+            background: var(--bg-color);
+            border: 2px dashed var(--primary-color);
+            color: var(--text-color);
+            width: 100%;
+            padding: 14px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .add-btn:hover {
+            border-style: solid;
+            background: var(--card-bg);
         }
 
         .image-preview {
-            max-width: 100px;
-            margin-top: 10px;
-            border-radius: 10px;
-            border: 1px solid rgba(44, 62, 127, 0.12);
+            max-width: 120px;
+            margin-top: 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--primary-color);
         }
 
+        /* ========== Dynamic Notification Center ========== */
         .status {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            padding: 10px 20px;
-            border-radius: 999px;
+            bottom: 24px;
+            right: 24px;
+            background: var(--primary-color);
+            color: #ffffff;
+            padding: 14px 28px;
+            border-radius: var(--radius-sm);
             display: none;
-            z-index: 1000;
-            box-shadow: 0 12px 22px rgba(44, 62, 127, 0.22);
+            z-index: 10000;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 0 25px var(--primary-color);
         }
 
-        @media (max-width: 768px) {
-            body {
-                padding: 14px;
-            }
-
+        /* ========== Fluid Responsive System Blocks ========== */
+        @media (max-width: 1024px) {
             .admin-container {
                 grid-template-columns: 1fr;
             }
@@ -373,71 +399,151 @@
             .tabs {
                 grid-column: auto;
                 position: static;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
             }
 
             .sidebar-head {
                 grid-column: 1 / -1;
+                margin-bottom: 0;
+            }
+
+            .tab-btn.active {
+                box-shadow: 0 0 10px var(--primary-color);
             }
 
             .tab-content {
                 grid-column: auto;
             }
-
-            .grid-2, .grid-3 {
-                grid-template-columns: 1fr;
-            }
-
-            .tab-btn {
-                padding: 8px 16px;
-                font-size: 12px;
-            }
-
-            .header {
-                position: static;
-            }
         }
+
+        @media (max-width: 768px) {
+            .tabs { grid-template-columns: repeat(2, 1fr); }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            .tabs { grid-template-columns: 1fr; }
+            .header { padding: 16px; }
+            button { width: 100%; }
+        }
+        /* ========== Login Overlay ========== */
+        #loginOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: grid;
+            place-items: center;
+            z-index: 20000;
+            padding: 24px;
+        }
+
+        #loginOverlay .panel {
+            background: var(--card-bg);
+            padding: 28px;
+            border-radius: var(--radius-md);
+            width: 420px;
+            max-width: 100%;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        #loginOverlay input[type="password"] {
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--primary-color);
+        }
+
+        /* utility hidden class (global) */
+        .hidden { display: none !important; }
+
+        /* ensure hiding the overlay when the hidden class is applied to the overlay itself */
+        #loginOverlay.hidden { display: none; }
     </style>
 </head>
 <body>
+    <!-- Add 'dark-mode-active' directly to this wrapper class if testing portfolio dark layout variations -->
+    <div id="loginOverlay">
+        <div class="panel">
+            <h3>Admin Login</h3>
+            <p>Please enter the admin password to access the control center.</p>
+            <input id="adminPasswordInput" type="password" placeholder="Password" />
+            <div style="margin-top:12px; display:flex; gap:8px; justify-content:center;">
+                <button class="btn-primary" onclick="tryLogin()">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal (hidden by default) -->
+    <div id="changePasswordModal" class="hidden" style="position:fixed; inset:0; display:grid; place-items:center; background:rgba(0,0,0,0.5); z-index:25000;">
+        <div style="background:var(--card-bg); padding:22px; border-radius:12px; width:420px; max-width:95%; border:1px solid var(--primary-color);">
+            <h3>Change Admin Password</h3>
+            <div style="margin-top:10px;">
+                <label>Current Password</label>
+                <input id="currentAdminPwd" type="password" placeholder="Current password">
+            </div>
+            <div style="margin-top:10px;">
+                <label>New Password</label>
+                <input id="newAdminPwd" type="password" placeholder="New password">
+            </div>
+            <div style="margin-top:10px;">
+                <label>Confirm New Password</label>
+                <input id="confirmAdminPwd" type="password" placeholder="Confirm new password">
+            </div>
+            <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:14px;">
+                <button onclick="closeChangePasswordModal()">Cancel</button>
+                <button class="btn-primary" onclick="saveChangePassword()">Save</button>
+            </div>
+        </div>
+    </div>
     <div class="admin-container">
+        
+        <!-- Header Controls Panel -->
         <div class="header">
             <div class="header-row">
                 <div class="brand-block">
-                    <div class="brand-mark">M</div>
+                    <div class="brand-mark">
+                        <img id="adminLogoImg" src="" alt="logo" style="display:none; width:44px; height:44px; object-fit:cover; border-radius:50%">
+                        <span id="brandMarkText">M</span>
+                    </div>
                     <div class="brand-copy">
-                        <h1>Portfolio Admin Panel</h1>
-                        <p>Edit everything without touching code. The admin now follows the same blue-and-red visual system as the public site.</p>
+                        <h1>Portfolio Admin Control Center</h1>
+                        <p>Branded Environment Instance Engine. Keep configuration fields synchronized.</p>
                     </div>
                 </div>
                 <div class="header-meta">
                     <div class="meta-chip">
-                        <span>Panels</span>
-                        <strong>10 sections</strong>
+                        <span>Workspace</span>
+                        <strong>Live Synced</strong>
                     </div>
                     <div class="meta-chip">
-                        <span>Sync</span>
-                        <strong>Auto-save on</strong>
-                    </div>
-                    <div class="meta-chip">
-                        <span>Theme</span>
-                        <strong>Portfolio palette</strong>
+                        <span>Database</span>
+                        <strong>Local Storage</strong>
                     </div>
                 </div>
             </div>
             <div class="controls">
-                <button class="btn-primary" onclick="saveAllData()">💾 Save All Changes</button>
-                <button class="btn-success" onclick="exportData()">📤 Export Data (Backup)</button>
-                <button class="btn-warning" onclick="importData()">📥 Import Data (Restore)</button>
-                <button class="btn-danger" onclick="resetToDefault()">🔄 Reset to Default</button>
-                <button class="btn-primary" onclick="viewLiveSite()">👁️ View Live Site</button>
+                <button class="btn-primary" onclick="saveAllData()">Save Changes</button>
+                <button onclick="viewLiveSite()">View Website</button>
+                <button onclick="exportData()">Export Database</button>
+                <button onclick="importData()">Restore Backup</button>
+                <button onclick="resetToDefault()">Reset Application</button>
+                <button onclick="logoutAdmin()">Logout</button>
+                <button onclick="changeAdminPassword()">Change Password</button>
+                <!-- Utility to toggle styles layout directly during admin workspace tests -->
+                <button onclick="document.querySelector('.admin-container').classList.toggle('dark-mode-active')" style="border-style: dashed;">Simulate Dark Theme</button>
             </div>
         </div>
 
+        <!-- Left Navigation Pipeline -->
         <div class="tabs">
             <div class="sidebar-head">
-                <h2>Sections</h2>
-                <p>Navigate the portfolio content blocks. The active section stays visible while you edit.</p>
+                <h2>Navigation</h2>
             </div>
             <button class="tab-btn active" onclick="switchTab('site', this)">Site Settings</button>
             <button class="tab-btn" onclick="switchTab('hero', this)">Hero Section</button>
@@ -447,279 +553,280 @@
             <button class="tab-btn" onclick="switchTab('services', this)">Services</button>
             <button class="tab-btn" onclick="switchTab('projects', this)">Projects</button>
             <button class="tab-btn" onclick="switchTab('certificates', this)">Certificates</button>
-            <button class="tab-btn" onclick="switchTab('contact', this)">Contact</button>
-            <button class="tab-btn" onclick="switchTab('social', this)">Social Links</button>
-            <button class="tab-btn" onclick="switchTab('colors', this)">Colors & Theme</button>
+            <button class="tab-btn" onclick="switchTab('contact', this)">Contact Settings</button>
+            <button class="tab-btn" onclick="switchTab('social', this)">Social Assets</button>
+            <button class="tab-btn" onclick="switchTab('colors', this)">Theme Schemas</button>
         </div>
 
-        <!-- Site Settings Tab -->
+        <!-- Global Settings Viewport -->
         <div id="site-tab" class="tab-content active">
             <div class="section-intro">
                 <div>
                     <h2>Site Settings</h2>
-                    <p>Global metadata, brand identity, and base settings used across the portfolio.</p>
+                    <p>Global environment properties, metadata registration, and indexing layouts.</p>
                 </div>
-                <div class="section-badge">Global controls</div>
+                <div class="section-badge">Global Engine</div>
             </div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Site Title (Browser Tab)</label>
-                    <input type="text" id="siteTitle" placeholder="Muhammad Ahmed - Portfolio">
+                    <label>Site Title (Document Header)</label>
+                    <input type="text" id="siteTitle" placeholder="Portfolio - Control Context">
                 </div>
                 <div class="form-group">
-                    <label>Logo Text</label>
-                    <input type="text" id="logoText" placeholder="Ahmed">
+                    <label>Application Branding Text</label>
+                    <input type="text" id="logoText" placeholder="Developer Workspace">
                 </div>
                 <div class="form-group">
-                    <label>Footer Copyright Text</label>
-                    <input type="text" id="copyrightText" placeholder="© 2026 Muhammad Ahmed. All rights reserved.">
+                    <label>System Registry Copyright Notice</label>
+                    <input type="text" id="copyrightText" placeholder="All rights reserved.">
                 </div>
                 <div class="form-group">
-                    <label>Favicon URL</label>
-                    <input type="text" id="faviconUrl" placeholder="assets/Icons/android-icon-192x192.png">
+                    <label>Favicon Resource Path</label>
+                    <input type="text" id="faviconUrl" placeholder="assets/icons/favicon.ico">
                 </div>
-                <div class="form-group">
-                    <label>SEO Description</label>
-                    <textarea id="seoDescription" placeholder="Portfolio of Muhammad Ahmed, Software Engineering student..."></textarea>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Search Engine Optimization (SEO) Description Meta</label>
+                    <textarea id="seoDescription" placeholder="Production grade description structure..."></textarea>
                 </div>
             </div>
         </div>
 
-        <!-- Hero Section Tab -->
+        <!-- Hero Settings Viewport -->
         <div id="hero-tab" class="tab-content">
             <div class="section-intro">
                 <div>
-                    <h2>Hero Section</h2>
-                    <p>Control the top introduction area, hero text, and profile image.</p>
+                    <h2>Hero Section Configuration</h2>
+                    <p>Manage primary viewport strings and media mapping targets.</p>
                 </div>
-                <div class="section-badge">First impression</div>
+                <div class="section-badge">Entry Viewport</div>
             </div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>First Name</label>
-                    <input type="text" id="heroFirstName" placeholder="Muhammad">
+                    <label>Given Name</label>
+                    <input type="text" id="heroFirstName" placeholder="Primary ID">
                 </div>
                 <div class="form-group">
-                    <label>Last Name (Highlighted)</label>
-                    <input type="text" id="heroLastName" placeholder="Ahmed">
+                    <label>Surname (Visual Highlight Node)</label>
+                    <input type="text" id="heroLastName" placeholder="Secondary ID">
                 </div>
-                <div class="form-group">
-                    <label>Typing Words (comma-separated)</label>
-                    <input type="text" id="heroTypingWords" placeholder="Web Developer, Web Designer, SEO Expert">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Typographical Array Matrix (Comma-Separated Values)</label>
+                    <input type="text" id="heroTypingWords" placeholder="Engineer, Architect, Consultant">
                 </div>
-                <div class="form-group">
-                    <label>Profile Image URL</label>
-                    <input type="text" id="heroImage" placeholder="assets/Images/Front3.JPG">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Profile Media Resource URI</label>
+                    <input type="text" id="heroImage" placeholder="assets/media/profile.jpg">
                     <img id="heroImagePreview" class="image-preview" style="display:none">
                 </div>
             </div>
         </div>
 
-        <!-- About Tab -->
+        <!-- About Settings Viewport -->
         <div id="about-tab" class="tab-content">
             <div class="section-intro">
                 <div>
-                    <h2>About Me Section</h2>
-                    <p>Keep the biography aligned with the public site narrative.</p>
+                    <h2>About Context</h2>
+                    <p>Personal narrative parameters and institutional background strings.</p>
                 </div>
-                <div class="section-badge">Profile copy</div>
+                <div class="section-badge">Biography Context</div>
             </div>
             <div class="form-group">
-                <label>About Heading</label>
-                <input type="text" id="aboutHeading" placeholder="About Me">
+                <label>Section Context Heading</label>
+                <input type="text" id="aboutHeading" placeholder="Profile Overview">
             </div>
             <div class="form-group">
-                <label>About Description</label>
-                <textarea id="aboutDescription" rows="5" placeholder="Hello! I'm Ahmed, a Full-Stack Developer..."></textarea>
+                <label>Biography Detailed Paragraph Object</label>
+                <textarea id="aboutDescription" rows="6" placeholder="Comprehensive background metadata initialization..."></textarea>
             </div>
         </div>
 
-        <!-- Skills Tab -->
+        <!-- Skills Matrix Viewport -->
         <div id="skills-tab" class="tab-content">
             <div class="section-intro">
                 <div>
-                    <h2>Skills Management</h2>
-                    <p>Manage the visual skill cards shown on the public portfolio.</p>
+                    <h2>Capabilities & Skill Matrix</h2>
+                    <p>Register stack dependencies and relative competency thresholds.</p>
                 </div>
-                <div class="section-badge">12 cards</div>
+                <div class="section-badge">Competency Matrix</div>
             </div>
             <div class="form-group">
-                <label>Skills Section Heading</label>
-                <input type="text" id="skillsHeading" placeholder="My Skills">
+                <label>Skills Title Node</label>
+                <input type="text" id="skillsHeading" placeholder="Core Technical Frameworks">
             </div>
             <div id="skillsList"></div>
-            <button class="btn-success add-btn" onclick="addSkill()">+ Add New Skill</button>
+            <button class="add-btn" onclick="addSkill()">Append Skill Schema</button>
         </div>
 
-        <!-- Education Tab -->
+        <!-- Timeline Viewport -->
         <div id="education-tab" class="tab-content">
             <div class="section-intro">
                 <div>
-                    <h2>Education Timeline</h2>
-                    <p>Edit the academic timeline items without changing the site code.</p>
+                    <h2>Academic History Timeline</h2>
+                    <p>Maintain timeline records regarding academic certifications and qualifications.</p>
                 </div>
-                <div class="section-badge">Timeline</div>
+                <div class="section-badge">Chronological Array</div>
             </div>
             <div class="form-group">
-                <label>Education Heading</label>
-                <input type="text" id="educationHeading" placeholder="Education">
+                <label>Education Section Title</label>
+                <input type="text" id="educationHeading" placeholder="Academic Background">
             </div>
             <div id="educationList"></div>
-            <button class="btn-success add-btn" onclick="addEducation()">+ Add Education Entry</button>
+            <button class="add-btn" onclick="addEducation()">Append Academic Entry</button>
         </div>
 
-        <!-- Services Tab -->
+        <!-- Provisions Portfolio Viewport -->
         <div id="services-tab" class="tab-content">
             <div class="section-intro">
                 <div>
-                    <h2>Services Management</h2>
-                    <p>Control the services cards that appear in the services section.</p>
+                    <h2>Service Portfolios</h2>
+                    <p>Construct commercial capabilities and technical execution provisions.</p>
                 </div>
-                <div class="section-badge">Service cards</div>
+                <div class="section-badge">Commercial Services</div>
             </div>
             <div class="form-group">
-                <label>Services Heading</label>
-                <input type="text" id="servicesHeading" placeholder="Our Services">
+                <label>Services Section Label</label>
+                <input type="text" id="servicesHeading" placeholder="Operational Capabilities">
             </div>
             <div id="servicesList"></div>
-            <button class="btn-success add-btn" onclick="addService()">+ Add New Service</button>
+            <button class="add-btn" onclick="addService()">Append Operational Schema</button>
         </div>
 
-        <!-- Projects Tab -->
+        <!-- Implementations Log Viewport -->
         <div id="projects-tab" class="tab-content">
             <div class="section-intro">
                 <div>
-                    <h2>Projects Management</h2>
-                    <p>Update project cards, links, and images for the portfolio grid.</p>
+                    <h2>Project Registry</h2>
+                    <p>Configure live application grid arrays, code links, and production captures.</p>
                 </div>
-                <div class="section-badge">Live work</div>
+                <div class="section-badge">Deployment Logs</div>
             </div>
             <div class="form-group">
-                <label>Projects Heading</label>
-                <input type="text" id="projectsHeading" placeholder="My Projects">
+                <label>Projects Overview Label</label>
+                <input type="text" id="projectsHeading" placeholder="Case Studies & Implementations">
             </div>
             <div id="projectsList"></div>
-            <button class="btn-success add-btn" onclick="addProject()">+ Add New Project</button>
+            <button class="add-btn" onclick="addProject()">Append Project Profile</button>
         </div>
 
-        <!-- Certificates Tab -->
+        <!-- Accreditations Array Viewport -->
         <div id="certificates-tab" class="tab-content">
             <div class="section-intro">
                 <div>
-                    <h2>Certificates Management</h2>
-                    <p>Keep the certificate list complete and make it easy to manage previews.</p>
+                    <h2>Compliance & Accreditations</h2>
+                    <p>Verification metrics and licensing verification path indicators.</p>
                 </div>
-                <div class="section-badge">Proof of work</div>
+                <div class="section-badge">Accreditation Array</div>
             </div>
             <div class="form-group">
-                <label>Certificates Heading</label>
-                <input type="text" id="certificatesHeading" placeholder="My Certificates">
+                <label>Certificates Section Title</label>
+                <input type="text" id="certificatesHeading" placeholder="Professional Qualifications">
             </div>
             <div id="certificatesList"></div>
-            <button class="btn-success add-btn" onclick="addCertificate()">+ Add New Certificate</button>
+            <button class="add-btn" onclick="addCertificate()">Append Accreditation Proof</button>
         </div>
 
-        <!-- Contact Tab -->
+        <!-- Comms Handshake Viewport -->
         <div id="contact-tab" class="tab-content">
             <div class="section-intro">
                 <div>
-                    <h2>Contact Section</h2>
-                    <p>Update WhatsApp, EmailJS, and map/embed configuration in one place.</p>
+                    <h2>Inbound Comms Integration</h2>
+                    <p>Coordinate active communication webhooks, spatial maps, and transmission targets.</p>
                 </div>
-                <div class="section-badge">Inbound settings</div>
+                <div class="section-badge">API Integrations</div>
             </div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Contact Heading</label>
-                    <input type="text" id="contactHeading" placeholder="Contact Me">
+                    <label>Contact Title Node</label>
+                    <input type="text" id="contactHeading" placeholder="Inbound Request Interface">
                 </div>
                 <div class="form-group">
-                    <label>WhatsApp Phone Number</label>
-                    <input type="text" id="whatsappNumber" placeholder="+923439692843">
+                    <label>Secure Comms Endpoint (Target Identity Number)</label>
+                    <input type="text" id="whatsappNumber" placeholder="+0000000000">
                 </div>
                 <div class="form-group">
-                    <label>EmailJS Public Key</label>
-                    <input type="text" id="emailjsKey" placeholder="4VnVdzOudEasDxmqH">
+                    <label>Email Transmission Key (Public ID Tokens)</label>
+                    <input type="text" id="emailjsKey" placeholder="Public Access Handshake">
                 </div>
                 <div class="form-group">
-                    <label>EmailJS Service ID</label>
-                    <input type="text" id="emailjsService" placeholder="service_js5vers">
+                    <label>Email Service Identifier Protocol</label>
+                    <input type="text" id="emailjsService" placeholder="Service Identification Key">
                 </div>
                 <div class="form-group">
-                    <label>EmailJS Template ID</label>
-                    <input type="text" id="emailjsTemplate" placeholder="template_a77kgvm">
+                    <label>Email Template Definition String</label>
+                    <input type="text" id="emailjsTemplate" placeholder="Template Layout Hash">
                 </div>
                 <div class="form-group">
-                    <label>Google Maps Embed URL</label>
+                    <label>Spatial Coordinate Iframe API Resource (Google Maps Mapping)</label>
                     <textarea id="mapEmbedUrl" rows="3" placeholder="https://www.google.com/maps/embed?..."></textarea>
                 </div>
             </div>
         </div>
 
-        <!-- Social Links Tab -->
+        <!-- Networks Map Viewport -->
         <div id="social-tab" class="tab-content">
             <div class="section-intro">
                 <div>
-                    <h2>Social Media Links</h2>
-                    <p>Maintain the same external brand links used on the public site.</p>
+                    <h2>Identity Matrices & Networks</h2>
+                    <p>Map structural public communication profiles and code networks.</p>
                 </div>
-                <div class="section-badge">Brand links</div>
+                <div class="section-badge">Network Map</div>
             </div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Instagram URL</label>
-                    <input type="text" id="instagramUrl" placeholder="https://www.instagram.com/...">
+                    <label>Brand Asset URI (Instagram Endpoint)</label>
+                    <input type="text" id="instagramUrl" placeholder="https://instagram.com/profile">
                 </div>
                 <div class="form-group">
-                    <label>GitHub URL</label>
-                    <input type="text" id="githubUrl" placeholder="https://github.com/...">
+                    <label>Version Control Endpoint (GitHub Core Portfolio)</label>
+                    <input type="text" id="githubUrl" placeholder="https://github.com/repository">
                 </div>
-                <div class="form-group">
-                    <label>LinkedIn URL</label>
-                    <input type="text" id="linkedinUrl" placeholder="https://www.linkedin.com/in/...">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Professional Profile Ledger URI (LinkedIn Authority Instance)</label>
+                    <input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/identity">
                 </div>
             </div>
         </div>
 
-        <!-- Colors & Theme Tab -->
+        <!-- Dynamic Style Tokens Viewport -->
         <div id="colors-tab" class="tab-content">
             <div class="section-intro">
                 <div>
-                    <h2>Theme Customization</h2>
-                    <p>Adjust the palette to keep the admin interface aligned with the portfolio.</p>
+                    <h2>Theme Vector Tokens</h2>
+                    <p>Define presentation tokens for the environment core stylesheets.</p>
                 </div>
-                <div class="section-badge">Theme tokens</div>
+                <div class="section-badge">Style Tokens</div>
             </div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Primary Color (Light Mode)</label>
+                    <label>Primary Accents (Light Matrix Configuration)</label>
                     <input type="color" id="primaryColorLight" value="#2C3E7F">
                 </div>
                 <div class="form-group">
-                    <label>Primary Color (Dark Mode)</label>
+                    <label>Primary Accents (Dark Matrix Configuration)</label>
                     <input type="color" id="primaryColorDark" value="#ee0033">
                 </div>
                 <div class="form-group">
-                    <label>Background Color (Light Mode)</label>
+                    <label>Canvas Base Color (Light Configuration)</label>
                     <input type="color" id="bgColorLight" value="#ffffff">
                 </div>
                 <div class="form-group">
-                    <label>Background Color (Dark Mode)</label>
+                    <label>Canvas Base Color (Dark Configuration)</label>
                     <input type="color" id="bgColorDark" value="#12172b">
                 </div>
                 <div class="form-group">
-                    <label>Text Color (Light Mode)</label>
+                    <label>Typography Base Value (Light Configuration)</label>
                     <input type="color" id="textColorLight" value="#000000">
                 </div>
                 <div class="form-group">
-                    <label>Text Color (Dark Mode)</label>
+                    <label>Typography Base Value (Dark Configuration)</label>
                     <input type="color" id="textColorDark" value="#f1f1f1">
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="status" class="status">✅ Changes Saved!</div>
+    <!-- Alert Messaging Toast Container -->
+    <div id="status" class="status">Changes updated. Configuration file compiled successfully.</div>
 
     <script src="admin.js"></script>
 </body>
