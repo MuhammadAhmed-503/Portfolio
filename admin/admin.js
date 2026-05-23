@@ -154,6 +154,21 @@ function normalizePortfolioData(rawData) {
 // Load or initialize data
 let portfolioData = normalizePortfolioData(JSON.parse(localStorage.getItem('portfolioData')));
 
+// --- Supabase client (publishable key) ---
+const SUPABASE_URL = 'https://htqzjhdybqyvindyqdfl.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_O7EQ8t3XgHE9C8jrBrh55w_KIg5fUt0';
+let supabase = null;
+try {
+    if (window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+} catch (e) {
+    console.warn('Supabase init failed', e);
+}
+
+// Undo stack
+window._undoStack = [];
+
 // --- Authentication & Admin Guard ---
 async function hashText(text) {
     if (!window.crypto || !crypto.subtle) return null;
@@ -174,21 +189,38 @@ function showPasswordHint() {
 }
 
 async function tryLogin() {
-    const input = document.getElementById('adminPasswordInput');
-    if (!input) return;
-    const pwd = input.value || '';
-    const h = await hashText(pwd);
-    const stored = localStorage.getItem('adminAuthHash');
-    if (h && stored && h === stored) {
-        // mark in-memory authenticated for this page session only
-        window.__adminAuthenticated = true;
-        document.getElementById('loginOverlay').classList.add('hidden');
-        document.querySelector('.admin-container').style.filter = 'none';
-        showStatus('🔐 Authenticated');
-        // now initialize admin data UI
-        loadDataToForms();
+    const email = document.getElementById('adminEmailInput')?.value || '';
+    const pwd = document.getElementById('adminPasswordInput')?.value || '';
+    if (supabase) {
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password: pwd });
+            if (error) {
+                showStatus('❌ ' + (error.message || 'Sign-in failed'));
+                return;
+            }
+            // mark authenticated for this page session
+            window.__adminAuthenticated = true;
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.querySelector('.admin-container').style.filter = 'none';
+            showStatus('🔐 Authenticated (Supabase)');
+            loadDataToForms();
+        } catch (e) {
+            console.error(e);
+            showStatus('❌ Sign-in error');
+        }
     } else {
-        showStatus('❌ Wrong password');
+        // fallback to local password if Supabase isn't available
+        const h = await hashText(pwd);
+        const stored = localStorage.getItem('adminAuthHash');
+        if (h && stored && h === stored) {
+            window.__adminAuthenticated = true;
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.querySelector('.admin-container').style.filter = 'none';
+            showStatus('🔐 Authenticated (local)');
+            loadDataToForms();
+        } else {
+            showStatus('❌ Wrong password');
+        }
     }
 }
 
@@ -255,6 +287,15 @@ function dragOver(e) {
     e.preventDefault();
     try { e.dataTransfer.dropEffect = 'move'; } catch (err) {}
 }
+function dragOver(e) {
+    e.preventDefault();
+    try { e.dataTransfer.dropEffect = 'move'; } catch (err) {}
+    // visual indicator
+    e.currentTarget && e.currentTarget.classList.add('drop-target');
+}
+function dragLeave(e) {
+    e.currentTarget && e.currentTarget.classList && e.currentTarget.classList.remove('drop-target');
+}
 function dragEnd(e) {
     e.currentTarget && e.currentTarget.classList && e.currentTarget.classList.remove('dragging');
     _dragState = null;
@@ -265,6 +306,8 @@ function dropItem(e, type, toIndex) {
     const { type: fromType, index: fromIndex } = _dragState;
     if (fromType !== type) return;
     if (fromIndex === toIndex) return;
+    // push previous state for undo
+    window._undoStack.push(JSON.parse(JSON.stringify(portfolioData)));
     const arr = portfolioData[type].items;
     const item = arr.splice(fromIndex, 1)[0];
     arr.splice(toIndex, 0, item);
@@ -278,6 +321,49 @@ function dropItem(e, type, toIndex) {
         case 'certificates': renderCertificatesList(); break;
     }
     _dragState = null;
+}
+
+function undoLast() {
+    if (!window._undoStack || window._undoStack.length === 0) {
+        showStatus('↩️ Nothing to undo');
+        return;
+    }
+    portfolioData = window._undoStack.pop();
+    localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+    loadDataToForms();
+    showStatus('↩️ Reverted last change');
+}
+
+async function saveToSupabase() {
+    if (!supabase) {
+        showStatus('❌ Supabase not initialized');
+        return false;
+    }
+    try {
+        const payload = { id: 'default', data: portfolioData, updated_at: new Date().toISOString() };
+        const { error } = await supabase.from('portfolio').upsert(payload);
+        if (error) {
+            console.error('Supabase upsert error', error);
+            showStatus('❌ Supabase save failed');
+            return false;
+        }
+        // backups table (optional)
+        await supabase.from('portfolio_backups').insert({ data: portfolioData, created_at: new Date().toISOString() });
+        showStatus('🛰️ Saved to Supabase');
+        return true;
+    } catch (e) {
+        console.error(e);
+        showStatus('❌ Supabase save error');
+        return false;
+    }
+}
+
+async function publishAll() {
+    saveAllData();
+    const ok = await saveToSupabase();
+    // reload preview iframe
+    try { document.getElementById('previewFrame')?.contentWindow?.location.reload(); } catch (e) { }
+    return ok;
 }
 
 function isAdminAuthenticated() {
@@ -521,7 +607,7 @@ function renderSkillsList() {
     container.innerHTML = '';
     portfolioData.skills.items.forEach((skill, index) => {
         container.innerHTML += `
-            <div class="skill-item draggable-item" draggable="true" ondragstart="dragStart(event,'skills',${index})" ondragover="dragOver(event)" ondrop="dropItem(event,'skills',${index})" ondragend="dragEnd(event)">
+            <div class="skill-item draggable-item" draggable="true" ondragstart="dragStart(event,'skills',${index})" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event,'skills',${index})" ondragend="dragEnd(event)">
                 <div class="drag-handle" title="Drag to reorder">☰</div>
                 <div style="flex:1">
                     <input type="text" placeholder="Skill Name" value="${skill.name}" onchange="updateSkill(${index}, 'name', this.value)">
@@ -553,7 +639,7 @@ function renderEducationList() {
     container.innerHTML = '';
     portfolioData.education.items.forEach((item, index) => {
         container.innerHTML += `
-            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'education',${index})" ondragover="dragOver(event)" ondrop="dropItem(event,'education',${index})" ondragend="dragEnd(event)">
+            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'education',${index})" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event,'education',${index})" ondragend="dragEnd(event)">
                 <div class="drag-handle" title="Drag to reorder">☰</div>
                 <div style="flex:1">
                     <input type="text" placeholder="Year" value="${item.year}" onchange="updateEducation(${index}, 'year', this.value)">
@@ -585,7 +671,7 @@ function renderServicesList() {
     container.innerHTML = '';
     portfolioData.services.items.forEach((item, index) => {
         container.innerHTML += `
-            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'services',${index})" ondragover="dragOver(event)" ondrop="dropItem(event,'services',${index})" ondragend="dragEnd(event)">
+            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'services',${index})" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event,'services',${index})" ondragend="dragEnd(event)">
                 <div class="drag-handle" title="Drag to reorder">☰</div>
                 <div style="flex:1">
                     <input type="text" placeholder="Title" value="${item.title}" onchange="updateService(${index}, 'title', this.value)">
@@ -617,7 +703,7 @@ function renderProjectsList() {
     container.innerHTML = '';
     portfolioData.projects.items.forEach((item, index) => {
         container.innerHTML += `
-            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'projects',${index})" ondragover="dragOver(event)" ondrop="dropItem(event,'projects',${index})" ondragend="dragEnd(event)">
+            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'projects',${index})" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event,'projects',${index})" ondragend="dragEnd(event)">
                 <div class="drag-handle" title="Drag to reorder">☰</div>
                 <div style="flex:1">
                     <input type="text" placeholder="Title" value="${item.title}" onchange="updateProject(${index}, 'title', this.value)">
@@ -651,7 +737,7 @@ function renderCertificatesList() {
     container.innerHTML = '';
     portfolioData.certificates.items.forEach((item, index) => {
         container.innerHTML += `
-            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'certificates',${index})" ondragover="dragOver(event)" ondrop="dropItem(event,'certificates',${index})" ondragend="dragEnd(event)">
+            <div class="project-item draggable-item" draggable="true" ondragstart="dragStart(event,'certificates',${index})" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event,'certificates',${index})" ondragend="dragEnd(event)">
                 <div class="drag-handle" title="Drag to reorder">☰</div>
                 <div style="flex:1">
                     <input type="text" placeholder="Title" value="${item.title}" onchange="updateCertificate(${index}, 'title', this.value)">

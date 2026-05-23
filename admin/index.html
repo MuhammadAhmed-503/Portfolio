@@ -464,6 +464,7 @@
 
         /* ensure hiding the overlay when the hidden class is applied to the overlay itself */
         #loginOverlay.hidden { display: none; }
+        .drop-target { outline: 3px dashed var(--primary-color); }
     </style>
 </head>
 <body>
@@ -471,11 +472,13 @@
     <div id="loginOverlay">
         <div class="panel">
             <h3>Admin Login</h3>
-            <p>Please enter the admin password to access the control center.</p>
-            <input id="adminPasswordInput" type="password" placeholder="Password" />
+            <p>Please sign in with your admin email and password.</p>
+            <input id="adminEmailInput" type="email" placeholder="admin@youremail.com" style="margin-top:10px;" />
+            <input id="adminPasswordInput" type="password" placeholder="Password" style="margin-top:8px;" />
             <div style="margin-top:12px; display:flex; gap:8px; justify-content:center;">
-                <button class="btn-primary" onclick="tryLogin()">Login</button>
+                <button class="btn-primary" onclick="tryLogin()">Sign in</button>
             </div>
+            <p style="font-size:0.8rem; opacity:0.8; margin-top:10px;">Using Supabase authentication.</p>
         </div>
     </div>
 
@@ -529,7 +532,9 @@
             </div>
             <div class="controls">
                 <button class="btn-primary" onclick="saveAllData()">Save Changes</button>
+                <button class="btn-primary" onclick="publishAll()">Publish</button>
                 <button onclick="viewLiveSite()">View Website</button>
+                <button onclick="undoLast()">Undo</button>
                 <button onclick="exportData()">Export Database</button>
                 <button onclick="importData()">Restore Backup</button>
                 <button onclick="resetToDefault()">Reset Application</button>
@@ -825,9 +830,15 @@
         </div>
     </div>
 
+    <!-- Live preview iframe -->
+    <div style="grid-column: 1 / -1; margin-top:12px;">
+        <iframe id="previewFrame" src="../index.html" style="width:100%; height:420px; border:1px solid var(--primary-color); border-radius:8px;"></iframe>
+    </div>
+
     <!-- Alert Messaging Toast Container -->
     <div id="status" class="status">Changes updated. Configuration file compiled successfully.</div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/index.min.js"></script>
     <script src="admin.js"></script>
 </body>
 </html>
