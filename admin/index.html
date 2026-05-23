@@ -14,6 +14,9 @@
             --surface-bg: rgba(255, 255, 255, 0.92);
             --border-color: rgba(44, 62, 127, 0.16);
             --shadow: 0 18px 50px rgba(19, 27, 54, 0.12);
+            --muted-text: rgba(0, 0, 0, 0.68);
+            --panel-bg: rgba(255, 255, 255, 0.84);
+            --panel-alt: rgba(44, 62, 127, 0.06);
         }
 
         *::before,
@@ -35,7 +38,7 @@
                 linear-gradient(180deg, #ffffff 0%, #f5f7fb 100%);
             color: var(--text-color);
             min-height: 100vh;
-            padding: 20px;
+            padding: 22px;
         }
 
         .admin-container {
@@ -43,7 +46,7 @@
             margin: 0 auto;
             display: grid;
             grid-template-columns: 290px minmax(0, 1fr);
-            gap: 20px;
+            gap: 22px;
             align-items: start;
         }
 
@@ -51,8 +54,8 @@
             grid-column: 1 / -1;
             background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(248,249,250,0.92));
             border: 1px solid var(--border-color);
-            border-radius: 22px;
-            padding: 22px 24px;
+            border-radius: 26px;
+            padding: 26px 28px;
             box-shadow: var(--shadow);
             backdrop-filter: blur(14px);
             position: sticky;
@@ -60,21 +63,75 @@
             z-index: 50;
         }
 
-        .header h1 {
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .brand-block {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .brand-mark {
+            width: 56px;
+            height: 56px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            font-size: 1.35rem;
+            box-shadow: 0 16px 24px rgba(44, 62, 127, 0.18);
+        }
+
+        .brand-copy h1 {
             color: var(--primary-color);
             margin-bottom: 8px;
             font-size: clamp(1.6rem, 3vw, 2.2rem);
         }
 
-        .header p {
-            color: rgba(0, 0, 0, 0.72);
+        .brand-copy p {
+            color: var(--muted-text);
             line-height: 1.6;
+            max-width: 760px;
+        }
+
+        .header-meta {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(120px, 1fr));
+            gap: 12px;
+            min-width: min(100%, 420px);
+        }
+
+        .meta-chip {
+            border: 1px solid rgba(44, 62, 127, 0.12);
+            border-radius: 18px;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.78);
+            box-shadow: 0 10px 22px rgba(19, 27, 54, 0.05);
+        }
+
+        .meta-chip span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--muted-text);
+            margin-bottom: 6px;
+        }
+
+        .meta-chip strong {
+            color: var(--primary-color);
+            font-size: 1rem;
         }
 
         .header .controls {
             display: flex;
             gap: 12px;
-            margin-top: 16px;
+            margin-top: 18px;
             flex-wrap: wrap;
         }
 
@@ -123,16 +180,32 @@
         .tabs {
             grid-column: 1;
             display: grid;
-            gap: 10px;
+            gap: 12px;
             position: sticky;
-            top: 124px;
+            top: 130px;
             align-self: start;
             background: var(--surface-bg);
             border: 1px solid var(--border-color);
-            border-radius: 22px;
-            padding: 16px;
+            border-radius: 26px;
+            padding: 18px;
             box-shadow: var(--shadow);
             backdrop-filter: blur(14px);
+        }
+
+        .sidebar-head {
+            padding: 12px 12px 4px;
+        }
+
+        .sidebar-head h2 {
+            color: var(--primary-color);
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+        }
+
+        .sidebar-head p {
+            color: var(--muted-text);
+            font-size: 0.92rem;
+            line-height: 1.5;
         }
 
         .tab-btn {
@@ -142,6 +215,7 @@
             width: 100%;
             text-align: left;
             border: 1px solid transparent;
+            border-radius: 16px;
         }
 
         .tab-btn.active {
@@ -159,8 +233,8 @@
             grid-column: 2;
             display: none;
             background: var(--surface-bg);
-            border-radius: 22px;
-            padding: 28px;
+            border-radius: 26px;
+            padding: 30px;
             margin-bottom: 20px;
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
@@ -177,6 +251,30 @@
             font-size: 1.5rem;
         }
 
+        .section-intro {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .section-intro p {
+            color: var(--muted-text);
+            line-height: 1.6;
+            max-width: 720px;
+        }
+
+        .section-badge {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: var(--panel-alt);
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            border: 1px solid rgba(44, 62, 127, 0.1);
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -190,7 +288,7 @@
 
         input, textarea, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px 14px;
             border: 1px solid rgba(44, 62, 127, 0.15);
             border-radius: 12px;
             font-size: 14px;
@@ -222,9 +320,9 @@
 
         .project-item, .skill-item, .certificate-item, .service-item {
             border: 1px solid rgba(44, 62, 127, 0.12);
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 16px;
+            border-radius: 18px;
             background: rgba(248, 249, 250, 0.95);
             box-shadow: 0 10px 24px rgba(19, 27, 54, 0.05);
         }
@@ -278,6 +376,10 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
+            .sidebar-head {
+                grid-column: 1 / -1;
+            }
+
             .tab-content {
                 grid-column: auto;
             }
@@ -300,8 +402,29 @@
 <body>
     <div class="admin-container">
         <div class="header">
-            <h1>Portfolio Admin Panel</h1>
-            <p>Edit everything without touching code. The admin now follows the same blue-and-red visual system as the public site.</p>
+            <div class="header-row">
+                <div class="brand-block">
+                    <div class="brand-mark">M</div>
+                    <div class="brand-copy">
+                        <h1>Portfolio Admin Panel</h1>
+                        <p>Edit everything without touching code. The admin now follows the same blue-and-red visual system as the public site.</p>
+                    </div>
+                </div>
+                <div class="header-meta">
+                    <div class="meta-chip">
+                        <span>Panels</span>
+                        <strong>10 sections</strong>
+                    </div>
+                    <div class="meta-chip">
+                        <span>Sync</span>
+                        <strong>Auto-save on</strong>
+                    </div>
+                    <div class="meta-chip">
+                        <span>Theme</span>
+                        <strong>Portfolio palette</strong>
+                    </div>
+                </div>
+            </div>
             <div class="controls">
                 <button class="btn-primary" onclick="saveAllData()">💾 Save All Changes</button>
                 <button class="btn-success" onclick="exportData()">📤 Export Data (Backup)</button>
@@ -312,6 +435,10 @@
         </div>
 
         <div class="tabs">
+            <div class="sidebar-head">
+                <h2>Sections</h2>
+                <p>Navigate the portfolio content blocks. The active section stays visible while you edit.</p>
+            </div>
             <button class="tab-btn active" onclick="switchTab('site', this)">Site Settings</button>
             <button class="tab-btn" onclick="switchTab('hero', this)">Hero Section</button>
             <button class="tab-btn" onclick="switchTab('about', this)">About Me</button>
@@ -327,7 +454,13 @@
 
         <!-- Site Settings Tab -->
         <div id="site-tab" class="tab-content active">
-            <h2>Site Settings</h2>
+            <div class="section-intro">
+                <div>
+                    <h2>Site Settings</h2>
+                    <p>Global metadata, brand identity, and base settings used across the portfolio.</p>
+                </div>
+                <div class="section-badge">Global controls</div>
+            </div>
             <div class="grid-2">
                 <div class="form-group">
                     <label>Site Title (Browser Tab)</label>
@@ -354,7 +487,13 @@
 
         <!-- Hero Section Tab -->
         <div id="hero-tab" class="tab-content">
-            <h2>Hero Section</h2>
+            <div class="section-intro">
+                <div>
+                    <h2>Hero Section</h2>
+                    <p>Control the top introduction area, hero text, and profile image.</p>
+                </div>
+                <div class="section-badge">First impression</div>
+            </div>
             <div class="grid-2">
                 <div class="form-group">
                     <label>First Name</label>
@@ -378,7 +517,13 @@
 
         <!-- About Tab -->
         <div id="about-tab" class="tab-content">
-            <h2>About Me Section</h2>
+            <div class="section-intro">
+                <div>
+                    <h2>About Me Section</h2>
+                    <p>Keep the biography aligned with the public site narrative.</p>
+                </div>
+                <div class="section-badge">Profile copy</div>
+            </div>
             <div class="form-group">
                 <label>About Heading</label>
                 <input type="text" id="aboutHeading" placeholder="About Me">
@@ -391,7 +536,13 @@
 
         <!-- Skills Tab -->
         <div id="skills-tab" class="tab-content">
-            <h2>Skills Management</h2>
+            <div class="section-intro">
+                <div>
+                    <h2>Skills Management</h2>
+                    <p>Manage the visual skill cards shown on the public portfolio.</p>
+                </div>
+                <div class="section-badge">12 cards</div>
+            </div>
             <div class="form-group">
                 <label>Skills Section Heading</label>
                 <input type="text" id="skillsHeading" placeholder="My Skills">
@@ -402,7 +553,13 @@
 
         <!-- Education Tab -->
         <div id="education-tab" class="tab-content">
-            <h2>Education Timeline</h2>
+            <div class="section-intro">
+                <div>
+                    <h2>Education Timeline</h2>
+                    <p>Edit the academic timeline items without changing the site code.</p>
+                </div>
+                <div class="section-badge">Timeline</div>
+            </div>
             <div class="form-group">
                 <label>Education Heading</label>
                 <input type="text" id="educationHeading" placeholder="Education">
@@ -413,7 +570,13 @@
 
         <!-- Services Tab -->
         <div id="services-tab" class="tab-content">
-            <h2>Services Management</h2>
+            <div class="section-intro">
+                <div>
+                    <h2>Services Management</h2>
+                    <p>Control the services cards that appear in the services section.</p>
+                </div>
+                <div class="section-badge">Service cards</div>
+            </div>
             <div class="form-group">
                 <label>Services Heading</label>
                 <input type="text" id="servicesHeading" placeholder="Our Services">
@@ -424,7 +587,13 @@
 
         <!-- Projects Tab -->
         <div id="projects-tab" class="tab-content">
-            <h2>Projects Management</h2>
+            <div class="section-intro">
+                <div>
+                    <h2>Projects Management</h2>
+                    <p>Update project cards, links, and images for the portfolio grid.</p>
+                </div>
+                <div class="section-badge">Live work</div>
+            </div>
             <div class="form-group">
                 <label>Projects Heading</label>
                 <input type="text" id="projectsHeading" placeholder="My Projects">
@@ -435,7 +604,13 @@
 
         <!-- Certificates Tab -->
         <div id="certificates-tab" class="tab-content">
-            <h2>Certificates Management</h2>
+            <div class="section-intro">
+                <div>
+                    <h2>Certificates Management</h2>
+                    <p>Keep the certificate list complete and make it easy to manage previews.</p>
+                </div>
+                <div class="section-badge">Proof of work</div>
+            </div>
             <div class="form-group">
                 <label>Certificates Heading</label>
                 <input type="text" id="certificatesHeading" placeholder="My Certificates">
@@ -446,7 +621,13 @@
 
         <!-- Contact Tab -->
         <div id="contact-tab" class="tab-content">
-            <h2>Contact Section</h2>
+            <div class="section-intro">
+                <div>
+                    <h2>Contact Section</h2>
+                    <p>Update WhatsApp, EmailJS, and map/embed configuration in one place.</p>
+                </div>
+                <div class="section-badge">Inbound settings</div>
+            </div>
             <div class="grid-2">
                 <div class="form-group">
                     <label>Contact Heading</label>
@@ -477,7 +658,13 @@
 
         <!-- Social Links Tab -->
         <div id="social-tab" class="tab-content">
-            <h2>Social Media Links</h2>
+            <div class="section-intro">
+                <div>
+                    <h2>Social Media Links</h2>
+                    <p>Maintain the same external brand links used on the public site.</p>
+                </div>
+                <div class="section-badge">Brand links</div>
+            </div>
             <div class="grid-2">
                 <div class="form-group">
                     <label>Instagram URL</label>
@@ -496,7 +683,13 @@
 
         <!-- Colors & Theme Tab -->
         <div id="colors-tab" class="tab-content">
-            <h2>Theme Customization</h2>
+            <div class="section-intro">
+                <div>
+                    <h2>Theme Customization</h2>
+                    <p>Adjust the palette to keep the admin interface aligned with the portfolio.</p>
+                </div>
+                <div class="section-badge">Theme tokens</div>
+            </div>
             <div class="grid-2">
                 <div class="form-group">
                     <label>Primary Color (Light Mode)</label>
