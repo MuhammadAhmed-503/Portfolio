@@ -1,9 +1,10 @@
-// Cache version - automatically increments for automatic updates
-const CACHE_VERSION = 'v' + Math.floor(Date.now() / 3600000); // Changes hourly
+// Bump this string on deploy to force clients to refresh cached assets.
+const CACHE_VERSION = '2026-05-23-1';
 const CACHE_NAME = 'ahmed-portfolio-' + CACHE_VERSION;
 const urlsToCache = [
   './',
   './index.html',
+  './manifest.json',
   './assets/CSS/styles.css',
   './assets/SCRIPT/script.js',
   './assets/Icons/android-icon-192x192.png'
@@ -23,10 +24,21 @@ self.addEventListener('install', (event) => {
 
 // Fetch event - Network first strategy for HTML, cache first for assets
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   const url = new URL(event.request.url);
-  
-  // Network first strategy for HTML files
-  if (url.pathname.endsWith('.html') || url.pathname === '/' || url.pathname === '') {
+  const isLocalAsset = url.origin === self.location.origin;
+  const isHtmlRequest =
+    event.request.mode === 'navigate' ||
+    url.pathname.endsWith('.html') ||
+    url.pathname.endsWith('/');
+  const isStyleOrScript =
+    url.pathname.endsWith('.css') || url.pathname.endsWith('.js');
+
+  // Network-first for HTML, CSS, and JS avoids stale styling on public deploys.
+  if (isHtmlRequest || (isLocalAsset && isStyleOrScript)) {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
@@ -39,37 +51,36 @@ self.addEventListener('fetch', (event) => {
           });
           return response;
         })
-        .catch(() => {
-          return caches.match(event.request);
-        })
+        .catch(() => caches.match(event.request, { ignoreSearch: true }))
     );
-  } else {
-    // Cache first strategy for assets (CSS, JS, images)
-    event.respondWith(
-      caches.match(event.request)
-        .then((response) => {
-          if (response) {
-            return response;
-          }
-          
-          return fetch(event.request).then((response) => {
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-            
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-            
-            return response;
-          });
-        })
-        .catch(() => {
-          return new Response('Offline', { status: 503 });
-        })
-    );
+    return;
   }
+
+  // Cache-first for other static assets.
+  event.respondWith(
+    caches.match(event.request, { ignoreSearch: true }).then((response) => {
+      if (response) {
+        return response;
+      }
+
+      return fetch(event.request).then((networkResponse) => {
+        if (
+          !networkResponse ||
+          networkResponse.status !== 200 ||
+          networkResponse.type !== 'basic'
+        ) {
+          return networkResponse;
+        }
+
+        const responseToCache = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+
+        return networkResponse;
+      });
+    })
+  );
 });
 
 // Activate event - clean up old caches
