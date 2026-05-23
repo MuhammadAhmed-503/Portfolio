@@ -1,0 +1,29 @@
+blogging website
+blogshpere.png
+https://blogsphere-sj9b.vercel.app/
+https://github.com/MuhammadAhmed-503/BLOGSPHERE
+Name: BlogShpere
+react, node, express, mongodb, cloudinary
+
+school website
+ghss.png
+https://ghss-sarai-public.web.app/
+Name: My School Website
+HTML, CSS, JS, Firebase, R2
+
+e-commerce website
+afc-yaseen.png
+https://afc-yaseen.vercel.app/
+https://github.com/MuhammadAhmed-503/alamgir-fashion-center
+Name: Alamgir Fashion Center
+react, node, express, mongodb, cloudinary
+
+Restaurant Table Booking Website
+deliciousone.png
+https://deliciousone.vercel.app/
+https://github.com/MuhammadAhmed-503/delicious
+react, node, express, mongodb, cloudinary
+
+ugraphics@2026
+ugraphics$2026
+Name: Delicious
