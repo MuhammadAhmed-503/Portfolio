@@ -160,3 +160,56 @@ document.addEventListener('DOMContentLoaded', function() {
     console.warn('Contact form not found');
   }
 });
+
+// ========== Image Modal Functions for Certificates ==========
+function openImageModal(imageSrc) {
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImage');
+  const captionText = document.getElementById('modalCaption');
+
+  // Clear previous image
+  modalImg.src = '';
+
+  // Show modal
+  modal.style.display = 'block';
+
+  // Set new image
+  modalImg.src = imageSrc;
+
+  // Set caption
+  if (imageSrc.includes('ai-f-e') || imageSrc.includes('ai-for-everyone')) {
+    captionText.innerHTML = 'AI for Everyone Certificate';
+  } else if (imageSrc.includes('f-s-s-d') || imageSrc.includes('ibm-full-stack')) {
+    captionText.innerHTML = 'IBM Full Stack Software Developer Certificate';
+  } else if (imageSrc.includes('ai-e') || imageSrc.includes('ai-essentials')) {
+    captionText.innerHTML = 'AI Essentials Certificate';
+  } else if (imageSrc.includes('a-p-m') || imageSrc.includes('agile-project')) {
+    captionText.innerHTML = 'Agile Project Management Certificate';
+  } else {
+    captionText.innerHTML = 'Certificate';
+  }
+
+  // Prevent body scrolling
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal() {
+  const modal = document.getElementById('imageModal');
+  modal.style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+// Close with Escape key
+document.addEventListener('keydown', function(event) {
+  const modal = document.getElementById('imageModal');
+  if (event.key === 'Escape' && modal.style.display === 'block') {
+    closeImageModal();
+  }
+});
+
+// Close when clicking outside image
+document.getElementById('imageModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeImageModal();
+  }
+});
