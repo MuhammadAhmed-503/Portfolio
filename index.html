@@ -40,6 +40,7 @@
     <meta name="apple-mobile-web-app-title" content="Ahmed Portfolio" />
     <link rel="stylesheet" href="assets/CSS/styles.css" />
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
@@ -58,11 +59,19 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   </head>
   <body>
+    <video id="background-video" class="background-video" autoplay muted loop playsinline preload="auto">
+      <source src="assets/Animated Wallper/itachi-sharingan-focus.1920x1080.mp4" type="video/mp4" />
+    </video>
+    <canvas id="space-background"></canvas>
+    <div class="info-pill">
+      <strong>DEEP SPACE</strong>
+      <span>Move mouse to navigate • Scroll to warp</span>
+    </div>
     <div class="container">
       <header>
         <nav>
           <div class="logo" data-aos="fade-right">
-            <span>Ahmed</span>
+            <span>Aحmed</span>
           </div>
           <ul data-aos="fade-down" id="navlist">
             <li><a href="#home">Home</a></li>
@@ -743,6 +752,270 @@
     <script src="assets/SCRIPT/script.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
+      const backgroundCanvas = document.getElementById('space-background');
+      const backgroundVideo = document.getElementById('background-video');
+      let activeBackgroundAnimation = null;
+      let backgroundAnimationFrameId = null;
+
+      function setBackgroundVisibility(mode) {
+        const isVideoMode = mode === 'animated-wallpaper';
+        backgroundCanvas.style.opacity = isVideoMode ? '0' : '1';
+        backgroundCanvas.style.display = isVideoMode ? 'none' : 'block';
+
+        if (isVideoMode) {
+          backgroundVideo.classList.add('active');
+          if (backgroundVideo.paused) {
+            backgroundVideo.play().catch(() => {});
+          }
+        } else {
+          backgroundVideo.classList.remove('active');
+          if (!backgroundVideo.paused) {
+            backgroundVideo.pause();
+          }
+        }
+      }
+
+      function initializeBackgroundAnimation() {
+        const savedData = localStorage.getItem('portfolioData');
+        let animSettings = {
+          darkModeAnimation: 'space',
+          lightModeAnimation: 'dot-particles'
+        };
+
+        if (savedData) {
+          const data = JSON.parse(savedData);
+          if (data.animations) {
+            animSettings = data.animations;
+          }
+        }
+
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        const rawAnimType = isDarkMode ? animSettings.darkModeAnimation : animSettings.lightModeAnimation;
+        const animType = rawAnimType === 'web-particles' || rawAnimType === 'particles' || rawAnimType === 'dot-particles'
+          ? 'dot-particles'
+          : rawAnimType;
+
+        if (backgroundAnimationFrameId) {
+          cancelAnimationFrame(backgroundAnimationFrameId);
+          backgroundAnimationFrameId = null;
+        }
+
+        activeBackgroundAnimation = animType;
+        setBackgroundVisibility(animType);
+
+        if (animType === 'space') {
+          initSpaceAnimation();
+        } else if (animType === 'dot-particles') {
+          initDotParticlesAnimation();
+        }
+      }
+
+      function initSpaceAnimation() {
+        const renderer = new THREE.WebGLRenderer({
+          canvas: backgroundCanvas,
+          antialias: true,
+          alpha: true,
+        });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 1;
+        camera.rotation.x = Math.PI / 2;
+
+        const starCount = 6000;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(starCount * 3);
+        const colors = new Float32Array(starCount * 3);
+        const velocities = new Float32Array(starCount);
+        const nebulaPalette = [
+          [1.0, 0.7, 0.0],
+          [1.0, 0.8, 0.2],
+          [1.0, 0.6, 0.1],
+          [1.0, 0.2, 0.8],
+          [1.0, 0.0, 1.0],
+          [1.0, 0.3, 0.7],
+          [0.0, 0.8, 1.0],
+          [0.2, 0.7, 1.0],
+          [0.0, 0.6, 1.0],
+        ];
+
+        for (let i = 0; i < starCount; i++) {
+          positions[i * 3] = (Math.random() - 0.5) * 600;
+          positions[i * 3 + 1] = (Math.random() - 0.5) * 600;
+          positions[i * 3 + 2] = (Math.random() - 0.5) * 600;
+          velocities[i] = 0.2 + Math.random() * 0.8;
+
+          const colorIdx = Math.floor(Math.random() * nebulaPalette.length);
+          colors[i * 3] = nebulaPalette[colorIdx][0];
+          colors[i * 3 + 1] = nebulaPalette[colorIdx][1];
+          colors[i * 3 + 2] = nebulaPalette[colorIdx][2];
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const textureCanvas = document.createElement('canvas');
+        textureCanvas.width = 64;
+        textureCanvas.height = 64;
+        const textureCtx = textureCanvas.getContext('2d');
+        const gradient = textureCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.5)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        textureCtx.fillStyle = gradient;
+        textureCtx.fillRect(0, 0, 64, 64);
+
+        const texture = new THREE.CanvasTexture(textureCanvas);
+        const material = new THREE.PointsMaterial({
+          size: 3,
+          transparent: true,
+          opacity: 0.8,
+          map: texture,
+          vertexColors: true,
+          sizeAttenuation: true,
+        });
+
+        const starField = new THREE.Points(geometry, material);
+        scene.add(starField);
+
+        let mouseX = 0;
+        let mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+          mouseX = (e.clientX - window.innerWidth / 2) * 0.0005;
+          mouseY = (e.clientY - window.innerHeight / 2) * 0.0005;
+        });
+
+        let speed = 0.5;
+        function animate() {
+          backgroundAnimationFrameId = requestAnimationFrame(animate);
+          const pos = geometry.attributes.position.array;
+          for (let i = 0; i < starCount; i++) {
+            pos[i * 3 + 1] -= velocities[i] * speed;
+            if (pos[i * 3 + 1] < -300) {
+              pos[i * 3 + 1] = 300;
+              pos[i * 3] = (Math.random() - 0.5) * 600;
+              pos[i * 3 + 2] = (Math.random() - 0.5) * 600;
+            }
+          }
+          geometry.attributes.position.needsUpdate = true;
+          starField.rotation.y += (mouseX - starField.rotation.y) * 0.05;
+          starField.rotation.x += (mouseY - starField.rotation.x) * 0.05;
+          renderer.render(scene, camera);
+        }
+
+        animate();
+        window.addEventListener('resize', () => {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+      }
+
+      function initDotParticlesAnimation() {
+        const canvas = backgroundCanvas;
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const particleCount = 80;
+        const connectionDistance = 150;
+
+        class Particle {
+          constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 2;
+            this.vy = (Math.random() - 0.5) * 2;
+            this.radius = Math.random() * 2 + 1;
+            this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+          }
+
+          update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            this.x = Math.max(0, Math.min(canvas.width, this.x));
+            this.y = Math.max(0, Math.min(canvas.height, this.y));
+          }
+
+          draw() {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+
+        let mouseX = canvas.width / 2;
+        let mouseY = canvas.height / 2;
+        document.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+        });
+
+        function animate() {
+          backgroundAnimationFrameId = requestAnimationFrame(animate);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          particles.forEach((particle) => {
+            particle.update();
+            particle.draw();
+          });
+
+          for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+              const dx = particles[i].x - particles[j].x;
+              const dy = particles[i].y - particles[j].y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+
+              if (distance < connectionDistance) {
+                ctx.strokeStyle = `rgba(100, 100, 255, ${1 - distance / connectionDistance})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+              }
+            }
+
+            const dx = particles[i].x - mouseX;
+            const dy = particles[i].y - mouseY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < connectionDistance * 1.5) {
+              ctx.strokeStyle = `rgba(255, 100, 150, ${1 - distance / (connectionDistance * 1.5)})`;
+              ctx.lineWidth = 1.5;
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(mouseX, mouseY);
+              ctx.stroke();
+            }
+          }
+        }
+
+        window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+
+        animate();
+      }
+
+      window.addEventListener('load', initializeBackgroundAnimation);
+      const originalChangeTheme = window.changeTheme;
+      window.changeTheme = function() {
+        originalChangeTheme();
+        setTimeout(initializeBackgroundAnimation, 100);
+      };
+    </script>
+    <script>
       AOS.init({
         duration: 2000,
         once: false,
@@ -784,14 +1057,62 @@
             });
         });
       }
+    </script>
 
-      <!-- Dynamic Content Loader from Admin Panel -->
+    <!-- Dynamic Content Loader from Admin Panel + Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/index.min.js"></script>
+    <script>
+      // Supabase Configuration
+      const SUPABASE_URL = 'https://qethcwnjbwrjqxumanar.supabase.co';
+      const SUPABASE_KEY = 'sb_publishable_SooiW5_L00Z3YbwS3QiTlQ_PrWiKdbQ';
+      let supabaseClient = null;
+      
+      try {
+        if (window.supabase) {
+          supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
+      } catch (e) {
+        console.warn('Supabase init failed:', e);
+      }
 
-    (function() {
-        // Load saved data from localStorage
-        const savedData = localStorage.getItem('portfolioData');
-        if(savedData) {
-            const data = JSON.parse(savedData);
+      async function loadPortfolioData() {
+        let data = null;
+
+        // Try to fetch from Supabase first
+        if (supabaseClient) {
+          try {
+            const { data: supabaseData, error } = await supabaseClient
+              .from('portfolio_data')
+              .select('data')
+              .eq('id', 'default')
+              .single();
+
+            if (!error && supabaseData) {
+              data = supabaseData.data;
+              console.log('✅ Data loaded from Supabase');
+            }
+          } catch (e) {
+            console.warn('Supabase fetch failed, falling back to localStorage:', e);
+          }
+        }
+
+        // Fall back to localStorage if Supabase fails
+        if (!data) {
+          const savedData = localStorage.getItem('portfolioData');
+          if (savedData) {
+            data = JSON.parse(savedData);
+            console.log('✅ Data loaded from localStorage');
+          }
+        }
+
+        return data;
+      }
+
+      loadPortfolioData().then(data => {
+        if(!data) {
+          console.log('No portfolio data found');
+          return;
+        }
             
             // Update page title
             document.title = data.site.title;
@@ -919,10 +1240,8 @@
               AOS.refresh();
             }
             
-            console.log('✅ Dynamic content loaded from admin panel');
-        }
-    })();
-
+            console.log('✅ Dynamic content loaded from Supabase/localStorage');
+        });
     </script>
   </body>
 </html>

@@ -560,6 +560,7 @@
             <button class="tab-btn" onclick="switchTab('certificates', this)">Certificates</button>
             <button class="tab-btn" onclick="switchTab('contact', this)">Contact Settings</button>
             <button class="tab-btn" onclick="switchTab('social', this)">Social Assets</button>
+            <button class="tab-btn" onclick="switchTab('animations', this)">Animations</button>
             <button class="tab-btn" onclick="switchTab('colors', this)">Theme Schemas</button>
         </div>
 
@@ -788,6 +789,43 @@
                 <div class="form-group" style="grid-column: span 2;">
                     <label>Professional Profile Ledger URI (LinkedIn Authority Instance)</label>
                     <input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/identity">
+                </div>
+            </div>
+        </div>
+
+        <!-- Animation & Background Settings Viewport -->
+        <div id="animations-tab" class="tab-content">
+            <div class="section-intro">
+                <div>
+                    <h2>Background Animations</h2>
+                    <p>Configure animations and background effects for light and dark modes.</p>
+                </div>
+                <div class="section-badge">Visual Effects</div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Dark Mode Background Animation</label>
+                    <select id="darkModeAnimation">
+                        <option value="space">Stars</option>
+                        <option value="dot-particles">Dot Particles</option>
+                        <option value="animated-wallpaper">Animated Wallpaper</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Light Mode Background Animation</label>
+                    <select id="lightModeAnimation">
+                        <option value="dot-particles">Dot Particles</option>
+                        <option value="space">Stars</option>
+                        <option value="animated-wallpaper">Animated Wallpaper</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dark Mode Background Color</label>
+                    <input type="color" id="darkModeBackground" value="#12172b">
+                </div>
+                <div class="form-group">
+                    <label>Light Mode Background Color</label>
+                    <input type="color" id="lightModeBackground" value="#ffffff">
                 </div>
             </div>
         </div>

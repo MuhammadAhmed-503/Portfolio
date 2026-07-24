@@ -92,6 +92,12 @@ const defaultData = {
         bgDark: "#12172b",
         textLight: "#000000",
         textDark: "#f1f1f1"
+    },
+    animations: {
+        darkModeAnimation: "space", // "space", "dot-particles", or "animated-wallpaper"
+        lightModeAnimation: "dot-particles", // "dot-particles", "space", or "animated-wallpaper"
+        darkModeBackground: "#12172b",
+        lightModeBackground: "#ffffff"
     }
 };
 
@@ -147,6 +153,7 @@ function normalizePortfolioData(rawData) {
     merged.contact = { ...merged.contact, ...(rawData.contact || {}) };
     merged.social = { ...merged.social, ...(rawData.social || {}) };
     merged.colors = { ...merged.colors, ...(rawData.colors || {}) };
+    merged.animations = { ...merged.animations, ...(rawData.animations || {}) };
 
     return merged;
 }
@@ -155,8 +162,8 @@ function normalizePortfolioData(rawData) {
 let portfolioData = normalizePortfolioData(JSON.parse(localStorage.getItem('portfolioData')));
 
 // --- Supabase client (publishable key) ---
-const SUPABASE_URL = 'https://htqzjhdybqyvindyqdfl.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_O7EQ8t3XgHE9C8jrBrh55w_KIg5fUt0';
+const SUPABASE_URL = 'https://qethcwnjbwrjqxumanar.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_SooiW5_L00Z3YbwS3QiTlQ_PrWiKdbQ';
 let supabase = null;
 try {
     if (window.supabase) {
@@ -450,11 +457,20 @@ function saveAllData() {
             bgDark: document.getElementById('bgColorDark').value,
             textLight: document.getElementById('textColorLight').value,
             textDark: document.getElementById('textColorDark').value
+        },
+        animations: {
+            darkModeAnimation: document.getElementById('darkModeAnimation').value,
+            lightModeAnimation: document.getElementById('lightModeAnimation').value,
+            darkModeBackground: document.getElementById('darkModeBackground').value,
+            lightModeBackground: document.getElementById('lightModeBackground').value
         }
     };
     
     localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
     showStatus('✅ All changes saved!');
+    
+    // Reload preview iframe to apply changes immediately
+    try { document.getElementById('previewFrame')?.contentWindow?.location.reload(); } catch (e) { }
     
     // Also save to a separate file for live site
     generateDynamicCSS();
@@ -560,6 +576,14 @@ function loadDataToForms() {
     document.getElementById('bgColorDark').value = portfolioData.colors.bgDark;
     document.getElementById('textColorLight').value = portfolioData.colors.textLight;
     document.getElementById('textColorDark').value = portfolioData.colors.textDark;
+
+    // Load animation settings
+    if (portfolioData.animations) {
+        document.getElementById('darkModeAnimation').value = portfolioData.animations.darkModeAnimation;
+        document.getElementById('lightModeAnimation').value = portfolioData.animations.lightModeAnimation;
+        document.getElementById('darkModeBackground').value = portfolioData.animations.darkModeBackground;
+        document.getElementById('lightModeBackground').value = portfolioData.animations.lightModeBackground;
+    }
 
     applyThemePreview();
     
