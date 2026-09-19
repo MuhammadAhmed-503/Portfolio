@@ -1,0 +1,33 @@
+# Environments & Secrets
+.env
+.env.local
+.env.*.local
+*.env
+backend/.env
+
+# Python & Virtual Environments
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+*.sqlite3
+*.db
+backend/tts_cache/
+backend/test.mp3
+
+# IDEs & System Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Node / Build artifacts & Dumps
+node_modules/
+dist/
+build/
+*codebase*.txt
+*combined*.txt
+

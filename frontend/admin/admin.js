@@ -196,38 +196,58 @@ function showPasswordHint() {
 }
 
 async function tryLogin() {
-    const email = document.getElementById('adminEmailInput')?.value || '';
+    const email = document.getElementById('adminEmailInput')?.value.trim() || '';
     const pwd = document.getElementById('adminPasswordInput')?.value || '';
-    if (supabase) {
+
+    // 1. If email is provided and Supabase is active, try Supabase Auth first
+    if (supabase && email) {
         try {
             const { data, error } = await supabase.auth.signInWithPassword({ email, password: pwd });
-            if (error) {
-                showStatus('❌ ' + (error.message || 'Sign-in failed'));
+            if (!error && data?.user) {
+                window.__adminAuthenticated = true;
+                document.getElementById('loginOverlay').classList.add('hidden');
+                document.querySelector('.admin-container').style.filter = 'none';
+                showStatus('🔐 Authenticated (Supabase)');
+                await syncFromSupabase();
+                loadDataToForms();
                 return;
             }
-            // mark authenticated for this page session
-            window.__adminAuthenticated = true;
-            document.getElementById('loginOverlay').classList.add('hidden');
-            document.querySelector('.admin-container').style.filter = 'none';
-            showStatus('🔐 Authenticated (Supabase)');
-            loadDataToForms();
+            console.warn('Supabase auth failed, trying local fallback:', error?.message);
         } catch (e) {
-            console.error(e);
-            showStatus('❌ Sign-in error');
+            console.warn('Supabase auth error:', e);
         }
+    }
+
+    // 2. Local SHA-256 password check (offline / master password fallback)
+    const h = await hashText(pwd);
+    const stored = localStorage.getItem('adminAuthHash');
+    if (h && stored && h === stored) {
+        window.__adminAuthenticated = true;
+        document.getElementById('loginOverlay').classList.add('hidden');
+        document.querySelector('.admin-container').style.filter = 'none';
+        showStatus('🔐 Authenticated (local)');
+        await syncFromSupabase();
+        loadDataToForms();
     } else {
-        // fallback to local password if Supabase isn't available
-        const h = await hashText(pwd);
-        const stored = localStorage.getItem('adminAuthHash');
-        if (h && stored && h === stored) {
-            window.__adminAuthenticated = true;
-            document.getElementById('loginOverlay').classList.add('hidden');
-            document.querySelector('.admin-container').style.filter = 'none';
-            showStatus('🔐 Authenticated (local)');
-            loadDataToForms();
-        } else {
-            showStatus('❌ Wrong password');
+        showStatus('❌ Wrong password or email');
+    }
+}
+
+async function syncFromSupabase() {
+    if (!supabase) return;
+    try {
+        const { data, error } = await supabase
+            .from('portfolio_data')
+            .select('data')
+            .eq('id', 'default')
+            .single();
+        if (!error && data?.data) {
+            portfolioData = normalizePortfolioData(data.data);
+            localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+            console.log('✅ Latest portfolio data synced from Supabase');
         }
+    } catch (e) {
+        console.warn('Could not sync from Supabase:', e);
     }
 }
 
@@ -293,10 +313,6 @@ function dragStart(e, type, index) {
 function dragOver(e) {
     e.preventDefault();
     try { e.dataTransfer.dropEffect = 'move'; } catch (err) {}
-}
-function dragOver(e) {
-    e.preventDefault();
-    try { e.dataTransfer.dropEffect = 'move'; } catch (err) {}
     // visual indicator
     e.currentTarget && e.currentTarget.classList.add('drop-target');
 }
@@ -348,7 +364,7 @@ async function saveToSupabase() {
     }
     try {
         const payload = { id: 'default', data: portfolioData, updated_at: new Date().toISOString() };
-        const { error } = await supabase.from('portfolio').upsert(payload);
+        const { error } = await supabase.from('portfolio_data').upsert(payload);
         if (error) {
             console.error('Supabase upsert error', error);
             showStatus('❌ Supabase save failed');
@@ -882,10 +898,68 @@ document.getElementById('heroImage')?.addEventListener('input', updateHeroImageP
     document.getElementById(id)?.addEventListener('input', applyThemePreview);
 });
 
+// --- AI Assistant Cloud Sync Toggle & Control ---
+function updateAISyncUI() {
+    const isEnabled = localStorage.getItem('aiGlobalSyncEnabled') === 'true';
+    const btn = document.getElementById('aiGlobalSyncBtn');
+    const chipText = document.getElementById('aiSyncStatusText');
+
+    if (btn) {
+        if (isEnabled) {
+            btn.textContent = '⚡ AI Cloud Sync: ON';
+            btn.style.background = 'rgba(0, 230, 118, 0.18)';
+            btn.style.color = '#00e676';
+            btn.style.borderColor = '#00e676';
+        } else {
+            btn.textContent = '⚡ AI Cloud Sync: OFF';
+            btn.style.background = 'rgba(255, 193, 7, 0.15)';
+            btn.style.color = '#ffb300';
+            btn.style.borderColor = '#ffb300';
+        }
+    }
+
+    if (chipText) {
+        if (isEnabled) {
+            chipText.textContent = 'Global Sync (Live)';
+            chipText.style.color = '#00e676';
+        } else {
+            chipText.textContent = 'Local Only (Safe)';
+            chipText.style.color = '#ffb300';
+        }
+    }
+}
+
+function toggleAIGlobalSync() {
+    const current = localStorage.getItem('aiGlobalSyncEnabled') === 'true';
+    const next = !current;
+    localStorage.setItem('aiGlobalSyncEnabled', String(next));
+    updateAISyncUI();
+    if (next) {
+        showStatus('⚡ AI Global Cloud Sync: ENABLED (AI changes will push to live Supabase)');
+    } else {
+        showStatus('🔒 AI Global Cloud Sync: DISABLED (AI changes will stay in local sandbox)');
+    }
+}
+
+async function publishAIChangesToCloud() {
+    const saved = localStorage.getItem('portfolioData');
+    if (!saved) {
+        showStatus('❌ No local data to publish');
+        return;
+    }
+    portfolioData = normalizePortfolioData(JSON.parse(saved));
+    loadDataToForms();
+    const ok = await publishAll();
+    if (ok) {
+        showStatus('🚀 Local AI Changes published globally to Supabase!');
+    }
+}
+
 // Initialize
 // Initialize authentication and UI only after ensuring a password exists
 async function initAuth() {
     await ensureAdminHash();
+    updateAISyncUI();
     // Always require password when loading the admin route.
     // On successful login `window.__adminAuthenticated` will be set for this page session.
     if (!isAdminAuthenticated()) {

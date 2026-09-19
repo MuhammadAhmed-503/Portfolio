@@ -24,8 +24,8 @@ self.addEventListener('install', (event) => {
 
 // Fetch event - Network first strategy for HTML, cache first for assets
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') {
-    return;
+  if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
+    return; // Do not intercept external URLs like Supabase or APIs
   }
 
   const url = new URL(event.request.url);
