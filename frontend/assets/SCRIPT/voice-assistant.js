@@ -190,8 +190,9 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
 }
 
 // ===== Voice Assistant =====
-const API_HOST = window.location.hostname || "127.0.0.1";
-const BACKEND_URL = `http://${API_HOST}:8000/api/voice/process`;
+const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const BACKEND_BASE = isLocal ? `http://${window.location.hostname || "127.0.0.1"}:8000` : "https://portfolio-backend-zcy2.onrender.com";
+const BACKEND_URL = `${BACKEND_BASE}/api/voice/process`;
 
 const SECTION_MAP = {
   scroll_home: "home",
@@ -1285,7 +1286,7 @@ function cycleBackgroundAnimation() {
 }
 
 // ---- Text-to-Speech with real audio-based lip-sync ----
-const TTS_URL = `http://${API_HOST}:8000/api/voice/tts`;
+const TTS_URL = `${BACKEND_BASE}/api/voice/tts`;
 
 let audioContext = null;
 let analyser = null;
